@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="icon" href="./images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <main>
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="./images/logo.jpeg" alt="logo" width="30" height="30">
+                <p><a href="https://github.com/NyctoRAA">ra.exe</a></p>
+            </div> 
+            <div class="sidebar-content">
+
+            </div>
+        </div>
+        <div class="content">
+
+        </div>
+        <dialog class="new-task-dialog" aria-label="New Task">
+            <div class="close-dialog">
+                <button class="close-dialog-btn">X</button>
+            </div>
+            <div class="dialog-container">
+                <h2>New Task</h2>
+                <form class="add-task-form hidden" method="dialog">
+                    <div class="form-section">
+                        <label for="title">Title:</label>
+                        <input type="text" name="titleInput" id="title" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="description">Description:</label>
+                        <input type="text" name="descInput" id="description" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="dueDate">Due Date:</label>
+                        <input type="datetime-local" name="dateInput" id="dueDate" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="priority">Priority:</label>
+                        <select name="priorityInput" id="priority">
+                            <option value="Normal">Normal</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="add-btn-container">
+                        <button class="add-task-btn" type="submit">Add Task</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
+    </main>
+</body>
+</html>
