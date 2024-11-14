@@ -18,18 +18,19 @@
 
             </div>
             <footer class="sidebar-footer">
+                <button class="add-project-btn">Add Project</button>
                 <dialog class="new-project-dialog" aria-label="New Project">
                     <div class="close-dialog">
-                        <button class="close-dialog-btn">X</button>
+                        <button class="close-project-dialog-btn">X</button>
                     </div>
                     <div class="dialog-container">
                         <h2>New Project</h2>
                         <form class="add-project-form hidden" method="dialog">
                             <div class="form-section">
                                 <label for="name">Project Name:</label>
-                                <input type="text" name="projectName" id="name">
+                                <input type="text" name="projectName" id="projectName">
                             </div>
-                            <button class="add-project-btn">Add Project</button>
+                            <button class="submit-project-btn">Submit</button>
                         </form>
                     </div>
                 </dialog>
@@ -40,32 +41,32 @@
         </div>
         <dialog class="new-task-dialog" aria-label="New Task">
             <div class="close-dialog">
-                <button class="close-dialog-btn">X</button>
+                <button class="close-task-dialog-btn">X</button>
             </div>
             <div class="dialog-container">
                 <h2>New Task</h2>
                 <form class="add-task-form hidden" method="dialog">
                     <div class="form-section">
-                        <label for="title">Title:</label>
-                        <input type="text" name="titleInput" id="title" required>
+                        <label for="taskTitle">Title:</label>
+                        <input type="text" name="titleInput" id="taskTitle" required>
                     </div>
                     <div class="form-section">
-                        <label for="description">Description:</label>
-                        <input type="text" name="descInput" id="description" required>
+                        <label for="taskDescription">Description:</label>
+                        <input type="text" name="descInput" id="taskDescription" required>
                     </div>
                     <div class="form-section">
                         <label for="dueDate">Due Date:</label>
                         <input type="datetime-local" name="dateInput" id="dueDate" required>
                     </div>
                     <div class="form-section">
-                        <label for="priority">Priority:</label>
-                        <select name="priorityInput" id="priority">
+                        <label for="taskPriority">Priority:</label>
+                        <select name="priorityInput" id="taskPriority">
                             <option value="Normal">Normal</option>
                             <option value="High">High</option>
                         </select>
                     </div>
-                    <div class="add-btn-container">
-                        <button class="add-task-btn" type="submit">Add Task</button>
+                    <div class="submit-btn-container">
+                        <button class="submit-task-btn" type="submit">Submit</button>
                     </div>
                 </form>
             </div>
