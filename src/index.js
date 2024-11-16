@@ -36,24 +36,31 @@ function createProjectUI(project) {
     deleteProjectBtn.appendChild(trashIcon);
     projectDiv.appendChild(deleteProjectBtn);
     
-    deleteProjectBtn.addEventListener("click", () => deleteProject(project, projectDiv));
+    deleteProjectBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        deleteProject(project, projectDiv);
+    });
+
+    projectDiv.addEventListener("click", () => {
+        if(projectsLibrary.includes(project)) {
+            displayProjectTasks(project);
+        }
+    });
 
     projectsContainer.appendChild(projectDiv);
-
-    projectDiv.addEventListener("click", () => displayProjectTasks(project));
 }
 
 function deleteProject(project, projectDiv) {
-    const porjectIndex = projectsLibrary.indexOf(project);
-    if(porjectIndex > -1) {
-        projectsLibrary.splice(porjectIndex, 1);
+    const projectIndex = projectsLibrary.indexOf(project);
+    if (projectIndex > -1) {
+        projectsLibrary.splice(projectIndex, 1);
     }
 
     projectsContainer.removeChild(projectDiv);
 
-    if(currentProject === project) {
-        mainPage.innerHTML = "";
+    if (currentProject === project) {
         currentProject = null;
+        mainPage.innerHTML = ""; 
     }
 }
 
@@ -139,6 +146,7 @@ submitTaskBtn.addEventListener("click", () => {
     newTaskDialog.close();
 });
 
+// Show & close modals listeners
 addProjectBtn.addEventListener("click", () => newProjectDialog.showModal());
 closeProjectsModalBtn.addEventListener("click", () => newProjectDialog.close());
 closeTasksModalBtn.addEventListener("click", () => newTaskDialog.close());
