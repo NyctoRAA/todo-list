@@ -22,32 +22,57 @@ function createProjectUI(project) {
     projectTitle.textContent = project.name;
 
     projectDiv.appendChild(projectTitle);
+
+    // Buttons container
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("project-buttons-container");
     
+    // Delete button
     const deleteProjectBtn = document.createElement("button");
     deleteProjectBtn.classList.add("delete-project-btn");
     
     const trashIcon = document.createElement("img");
-    trashIcon.width = 30;
-    trashIcon.height = 30;
     trashIcon.src = "path/to/trash-icon.png";
     trashIcon.alt = "Delete Project";
+    trashIcon.width = 30;
+    trashIcon.height = 30;
     trashIcon.classList.add("trash-icon");
-    
+
     deleteProjectBtn.appendChild(trashIcon);
-    projectDiv.appendChild(deleteProjectBtn);
+    buttonsContainer.appendChild(deleteProjectBtn);
     
     deleteProjectBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         deleteProject(project, projectDiv);
     });
 
+    // Edit button
+    const editProjectBtn = document.createElement("button");
+    editProjectBtn.classList.add("edit-project-btn");
+
+    const editIcon = document.createElement("img");
+    editIcon.classList.add("edit-icon");
+    editIcon.src = "path/to/edit-icon.png";
+    editIcon.alt = "Edit Project";
+    editIcon.width = 30;
+    editIcon.height = 30;
+
+    editProjectBtn.appendChild(editIcon);
+    buttonsContainer.appendChild(editProjectBtn);
+
+    editProjectBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openTaskModalForProject(project);
+    })
+
+    projectDiv.appendChild(buttonsContainer);
+    projectsContainer.appendChild(projectDiv);
+
     projectDiv.addEventListener("click", () => {
         if(projectsLibrary.includes(project)) {
             displayProjectTasks(project);
         }
     });
-
-    projectsContainer.appendChild(projectDiv);
 }
 
 function deleteProject(project, projectDiv) {
@@ -108,9 +133,56 @@ function displayProjectTasks(project) {
         taskDueDate.textContent = task.dueDate;
         taskDiv.appendChild(taskDueDate);
 
+        // Buttons container
+        const buttonsContainer = document.createElement("div");
+        buttonsContainer.classList.add("task-buttons-container");
+
+        // Delete task button
+        const deleteTaskBtn = document.createElement("button");
+        deleteTaskBtn.classList.add("delete-task-btn");
+
+        const trashIcon = document.createElement("img");
+        trashIcon.classList.add("trash-icon");
+        trashIcon.src = "path/to/trash-icon.png";
+        trashIcon.alt = "Delete task";
+        trashIcon.width = 30;
+        trashIcon.height = 30;
+
+        deleteTaskBtn.appendChild(trashIcon);
+        buttonsContainer.appendChild(deleteTaskBtn);
+
+        deleteTaskBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            project.tasksContainer.splice(index, 1);
+            displayProjectTasks(project);
+        });
+        
+        // Edit task button
+        const editTaskBtn = document.createElement("button");
+        editTaskBtn.classList.add("edit-task-btn");
+
+        const editIcon = document.createElement("img");
+        editIcon.classList.add("edit-icon");
+        editIcon.src = "path/to/edit-icon.png";
+        editIcon.alt = "Edit task";
+        editIcon.width = 30;
+        editIcon.height = 30;
+
+        editTaskBtn.appendChild(editIcon);
+        buttonsContainer.appendChild(editTaskBtn);
+
+        editTaskBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openEditTaskModal(task, project);
+        });
+
+        taskDiv.appendChild(buttonsContainer);
         mainPage.appendChild(taskDiv);
     });
- 
+
+    
+
+    // Add task button
     const addTaskBtn = document.createElement("button");
     addTaskBtn.textContent = "Add Task";
     addTaskBtn.classList.add("add-task-btn");
@@ -119,6 +191,53 @@ function displayProjectTasks(project) {
 
     mainPage.appendChild(addTaskBtn);
 };
+
+function openEditTaskModal(task, project) {
+    const taskTitleInput = document.querySelector("#taskTitle");
+    const taskDescriptionInput = document.querySelector("#taskDescription");
+    const taskPriorityInput = document.querySelector("#taskPriority");
+    const taskDueDateInput = document.querySelector("#dueDate");
+
+    taskTitleInput.value = task.title;
+    taskDescriptionInput.value = task.description;
+    taskPriorityInput.value = task.priority;
+    taskDueDateInput.value = task.dueDate;
+
+    newTaskDialog.showModal();
+
+    submitTaskBtn.textContent = "Save Changes";
+
+    submitTaskBtn.replaceWith(submitTaskBtn.cloneNode(true));
+    const newTaskSubmitBtn = document.querySelector(".submit-task-btn");
+
+    newTaskSubmitBtn.addEventListener("click", () => {
+        task.title = taskTitleInput.value;
+        task.description = taskDescriptionInput.value;
+        task.priority = taskPriorityInput.value;
+        task.dueDate = taskDueDateInput.value;
+
+        displayProjectTasks(project);
+        newTaskDialog.close();
+
+        newTaskSubmitBtn.textContent = "Add task";
+        newTaskSubmitBtn.addEventListener("click", addTaskHandler);
+    });
+}
+
+function addTaskHandler() {
+    const taskTitle = document.querySelector("#taskTitle").value;
+    const taskDescription = document.querySelector("#taskDescription").value;
+    const taskPriority = document.querySelector("#taskPriority").value;
+    const taskDueDate = document.querySelector("#dueDate").value;
+
+    if(currentProject) {
+        const task = createTask(taskTitle, taskDescription, taskPriority, taskDueDate);
+        currentProject.addTask(task);
+    };
+
+    displayProjectTasks(currentProject);
+    newTaskDialog.close();
+}
 
 //event listeners
 
@@ -131,20 +250,7 @@ submitProjectBtn.addEventListener("click", () => {
     newProjectDialog.close();
 });
 
-submitTaskBtn.addEventListener("click", () => {
-    const taskTitle = document.querySelector("#taskTitle").value;
-    const taskDescription = document.querySelector("#taskDescription").value;
-    const taskPriority = document.querySelector("#taskPriority").value;
-    const taskDueDate = document.querySelector("#dueDate").value;
-
-    if(currentProject) {
-        const task = createTask(taskTitle, taskDescription, taskPriority, taskDueDate);
-        currentProject.addTask(task);
-    }
-
-    displayProjectTasks(currentProject);
-    newTaskDialog.close();
-});
+submitTaskBtn.addEventListener("click", addTaskHandler);
 
 // Show & close modals listeners
 addProjectBtn.addEventListener("click", () => newProjectDialog.showModal());
