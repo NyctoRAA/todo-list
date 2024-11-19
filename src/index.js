@@ -32,7 +32,7 @@ function createProjectUI(project) {
     deleteProjectBtn.classList.add("delete-project-btn");
     
     const trashIcon = document.createElement("img");
-    trashIcon.src = "path/to/trash-icon.png";
+    trashIcon.src = "./images/trash-icon.png";
     trashIcon.alt = "Delete Project";
     trashIcon.width = 30;
     trashIcon.height = 30;
@@ -52,7 +52,7 @@ function createProjectUI(project) {
 
     const editIcon = document.createElement("img");
     editIcon.classList.add("edit-icon");
-    editIcon.src = "path/to/edit-icon.png";
+    editIcon.src = "./images/edit-icon.png";
     editIcon.alt = "Edit Project";
     editIcon.width = 30;
     editIcon.height = 30;
@@ -143,7 +143,7 @@ function displayProjectTasks(project) {
 
         const trashIcon = document.createElement("img");
         trashIcon.classList.add("trash-icon");
-        trashIcon.src = "path/to/trash-icon.png";
+        trashIcon.src = "./images/trash-icon.png";
         trashIcon.alt = "Delete task";
         trashIcon.width = 30;
         trashIcon.height = 30;
@@ -163,7 +163,7 @@ function displayProjectTasks(project) {
 
         const editIcon = document.createElement("img");
         editIcon.classList.add("edit-icon");
-        editIcon.src = "path/to/edit-icon.png";
+        editIcon.src = "./images/edit-icon.png";
         editIcon.alt = "Edit task";
         editIcon.width = 30;
         editIcon.height = 30;
