@@ -1,5 +1,9 @@
 import { createProject } from "./project";
 import { createTask } from "./task";
+import trashIconSvg from "./images/trash-icon.svg";
+import editIconSvg from "./images/edit-icon.svg";
+import { format, isTomorrow, isYesterday, isToday, differenceInDays } from 'date-fns';
+import { description } from "commander";
 
 const addProjectBtn = document.querySelector(".add-project-btn");
 const submitProjectBtn = document.querySelector(".submit-project-btn");
@@ -13,6 +17,38 @@ const mainPage = document.querySelector(".content");
 
 const projectsLibrary = [];
 let currentProject = null;
+
+function saveToLocalStorage() {
+    const dataToSave = projectsLibrary.map((project) => ({
+        name: project.name,
+        tasksContainer: project.tasksContainer.map((task) => ({
+            title: task.title,
+            description: task.description,
+            priority: task.priority,
+            dueDate: task.dueDate
+        })),
+    }));
+
+    localStorage.setItem('projectsLibrary', JSON.stringify(dataToSave));    
+}
+
+function loadFromLocalStorage() {
+    const savedData = localStorage.getItem("projectsLibrary");
+    if(savedData) {
+        const parsedData = JSON.parse(savedData);
+        projectsLibrary.length = 0; // Cleans the array without losing it's reference;
+        parsedData.forEach((projectData) => {
+            const project = createProject(projectData.name);
+            project.tasksContainer = project.tasksContainer.map((task) => createTask(task.title, task.description, task.priority, task.dueDate));
+            projectsLibrary.push(project);
+        });
+    }
+};
+
+// Load the data form the localStorage when starting
+loadFromLocalStorage();
+projectsLibrary.forEach((project) => createProjectUI(project));
+
 
 function createProjectUI(project) {
     const projectDiv = document.createElement("div");
@@ -32,7 +68,7 @@ function createProjectUI(project) {
     deleteProjectBtn.classList.add("delete-project-btn");
     
     const trashIcon = document.createElement("img");
-    trashIcon.src = "./images/trash-icon.png";
+    trashIcon.src = trashIconSvg;
     trashIcon.alt = "Delete Project";
     trashIcon.width = 30;
     trashIcon.height = 30;
@@ -52,7 +88,7 @@ function createProjectUI(project) {
 
     const editIcon = document.createElement("img");
     editIcon.classList.add("edit-icon");
-    editIcon.src = "./images/edit-icon.png";
+    editIcon.src = editIconSvg;
     editIcon.alt = "Edit Project";
     editIcon.width = 30;
     editIcon.height = 30;
@@ -87,6 +123,8 @@ function deleteProject(project, projectDiv) {
         currentProject = null;
         mainPage.innerHTML = ""; 
     }
+
+    saveToLocalStorage();
 }
 
 function openTaskModalForProject(project) {
@@ -97,11 +135,33 @@ function openTaskModalForProject(project) {
 function addProjectToSidebar(project) {
     projectsLibrary.push(project);
     createProjectUI(project);
+    saveToLocalStorage();
+}
+
+function formatDueDate(date) {
+    const taskDate = new Date(date);
+    
+    if(isToday(taskDate)) {
+        return "Today";
+    } else if(isTomorrow(taskDate)) {
+        return "Tomorrow";
+    } else if(isYesterday(taskDate)) {
+        return "Yesterday";
+    };
+
+    const daysDifference = differenceInDays(taskDate, new Date());
+    if(daysDifference > 0) {
+        return `In ${daysDifference} days.`;
+    } else if (daysDifference < 0) {
+        `${Math.abs(daysDifference)} days ago.`;
+    }
+
+    return format(taskDate, 'EEE MMM dd yyyy');
 }
 
 function displayProjectTasks(project) {
     if (!project) {
-        console.error("Projeto não encontrado ou indefinido!");
+        console.error("Project not found or undefined!");
         return;
     }
 
@@ -130,7 +190,7 @@ function displayProjectTasks(project) {
         taskDiv.appendChild(taskPriority);
 
         const taskDueDate = document.createElement("p");
-        taskDueDate.textContent = task.dueDate;
+        taskDueDate.textContent = `Due Date: ${formatDueDate(task.dueDate)}`;
         taskDiv.appendChild(taskDueDate);
 
         // Buttons container
@@ -143,7 +203,7 @@ function displayProjectTasks(project) {
 
         const trashIcon = document.createElement("img");
         trashIcon.classList.add("trash-icon");
-        trashIcon.src = "./images/trash-icon.png";
+        trashIcon.src = trashIconSvg;
         trashIcon.alt = "Delete task";
         trashIcon.width = 30;
         trashIcon.height = 30;
@@ -154,6 +214,7 @@ function displayProjectTasks(project) {
         deleteTaskBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             project.tasksContainer.splice(index, 1);
+            saveToLocalStorage();
             displayProjectTasks(project);
         });
         
@@ -163,7 +224,7 @@ function displayProjectTasks(project) {
 
         const editIcon = document.createElement("img");
         editIcon.classList.add("edit-icon");
-        editIcon.src = "./images/edit-icon.png";
+        editIcon.src = editIconSvg;
         editIcon.alt = "Edit task";
         editIcon.width = 30;
         editIcon.height = 30;
@@ -233,6 +294,7 @@ function addTaskHandler() {
     if(currentProject) {
         const task = createTask(taskTitle, taskDescription, taskPriority, taskDueDate);
         currentProject.addTask(task);
+        saveToLocalStorage();
     };
 
     displayProjectTasks(currentProject);
@@ -246,6 +308,7 @@ submitProjectBtn.addEventListener("click", () => {
     const project = createProject(projectName);
 
     addProjectToSidebar(project);
+    saveToLocalStorage();
 
     newProjectDialog.close();
 });
