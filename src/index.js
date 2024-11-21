@@ -3,7 +3,6 @@ import { createTask } from "./task";
 import trashIconSvg from "./images/trash-icon.svg";
 import editIconSvg from "./images/edit-icon.svg";
 import { format, isTomorrow, isYesterday, isToday, differenceInDays } from 'date-fns';
-import { description } from "commander";
 
 const addProjectBtn = document.querySelector(".add-project-btn");
 const submitProjectBtn = document.querySelector(".submit-project-btn");
@@ -34,12 +33,14 @@ function saveToLocalStorage() {
 
 function loadFromLocalStorage() {
     const savedData = localStorage.getItem("projectsLibrary");
-    if(savedData) {
+    if (savedData) {
         const parsedData = JSON.parse(savedData);
-        projectsLibrary.length = 0; // Cleans the array without losing it's reference;
+        projectsLibrary.length = 0; // Cleans the array without losing the reference
         parsedData.forEach((projectData) => {
             const project = createProject(projectData.name);
-            project.tasksContainer = project.tasksContainer.map((task) => createTask(task.title, task.description, task.priority, task.dueDate));
+            projectData.tasksContainer.forEach((task) => {
+                project.addTask(createTask(task.title, task.description, task.priority, task.dueDate));
+            });
             projectsLibrary.push(project);
         });
     }
@@ -285,7 +286,15 @@ function openEditTaskModal(task, project) {
     });
 }
 
-function addTaskHandler() {
+function addTaskHandler(event) {
+    event.preventDefault();
+
+    const form = document.querySelector(".add-task-form");
+    if(!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
     const taskTitle = document.querySelector("#taskTitle").value;
     const taskDescription = document.querySelector("#taskDescription").value;
     const taskPriority = document.querySelector("#taskPriority").value;

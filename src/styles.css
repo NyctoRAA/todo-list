@@ -4,7 +4,9 @@ html {
 }
 
 main {
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 8fr;
+    grid-template-areas: "sidebar content";
     height: 100vh;
 }
 
