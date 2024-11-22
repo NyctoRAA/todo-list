@@ -30,6 +30,17 @@ main {
     opacity: 1;      
 }
 
+.task.completed .status-span {
+    display: inline-block;
+    color: green;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.task.completed p, .task.completed .task-buttons-container {
+    pointer-events: none;
+}
+
 .task.disabled {
     pointer-events: none;
 }

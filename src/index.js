@@ -240,6 +240,7 @@ function displayProjectTasks(project) {
             taskDiv.classList.add("completed");
             statusSpan.textContent = "Done ✔";
             statusSpan.style.color = "green";
+            taskDiv.appendChild(statusSpan);
 
             taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
                 child.style.pointerEvents = "none";
