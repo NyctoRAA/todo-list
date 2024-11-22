@@ -1,3 +1,4 @@
+import "./styles.css";
 import { createProject } from "./project";
 import { createTask } from "./task";
 import trashIconSvg from "./images/trash-icon.svg";
@@ -24,7 +25,8 @@ function saveToLocalStorage() {
             title: task.title,
             description: task.description,
             priority: task.priority,
-            dueDate: task.dueDate
+            dueDate: task.dueDate,
+            completed: task.completed,
         })),
     }));
 
@@ -32,19 +34,45 @@ function saveToLocalStorage() {
 }
 
 function loadFromLocalStorage() {
-    const savedData = localStorage.getItem("projectsLibrary");
-    if (savedData) {
-        const parsedData = JSON.parse(savedData);
-        projectsLibrary.length = 0; // Cleans the array without losing the reference
-        parsedData.forEach((projectData) => {
-            const project = createProject(projectData.name);
-            projectData.tasksContainer.forEach((task) => {
-                project.addTask(createTask(task.title, task.description, task.priority, task.dueDate));
+    try {
+        const savedData = localStorage.getItem("projectsLibrary");
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+
+            // Verifies if its an array before moving on
+            if (!Array.isArray(parsedData)) {
+                console.warn("Data in localStorage is not in expected format. Resetting...");
+                return;
+            }
+
+            projectsLibrary.length = 0; // Cleans the array without losing it's reference
+
+            parsedData.forEach((projectData) => {
+                // Verifies the basic estructure of each project
+                if (!projectData.name || !Array.isArray(projectData.tasksContainer)) {
+                    console.warn("Project data is invalid. Skipping...");
+                    return;
+                }
+
+                const project = createProject(projectData.name);
+
+                // Filtrates valid tasks
+                project.tasksContainer = projectData.tasksContainer
+                    .filter((task) => task.dueDate && !isNaN(new Date(task.dueDate)))
+                    .map((task) => {
+                        const restoredTask = createTask(task.title, task.description, task.priority, task.dueDate);
+                        restoredTask.completed = !!task.completed;
+                        return restoredTask;
+                    });
+
+                projectsLibrary.push(project);
             });
-            projectsLibrary.push(project);
-        });
+        }
+    } catch (error) {
+        console.error("Error loading data from localStorage:", error);
     }
-};
+}
+
 
 // Load the data form the localStorage when starting
 loadFromLocalStorage();
@@ -140,6 +168,10 @@ function addProjectToSidebar(project) {
 }
 
 function formatDueDate(date) {
+    if(!date || isNaN(new Date(date))) {
+        return "No due date.";
+    }
+
     const taskDate = new Date(date);
     
     if(isToday(taskDate)) {
@@ -179,7 +211,7 @@ function displayProjectTasks(project) {
         taskDiv.classList.add("task");
         
         const taskTitle = document.createElement("p");
-        taskTitle.textContent = `Task ${index + 1}: ${task.title}`;
+        taskTitle.textContent = task.title;
         taskDiv.appendChild(taskTitle);
 
         const taskDescription = document.createElement("p");
@@ -187,12 +219,48 @@ function displayProjectTasks(project) {
         taskDiv.appendChild(taskDescription);
 
         const taskPriority = document.createElement("p");
+        if(task.priority == "High") {
+            taskPriority.style.color = "DarkRed";
+        }   
         taskPriority.textContent = task.priority;
         taskDiv.appendChild(taskPriority);
+
 
         const taskDueDate = document.createElement("p");
         taskDueDate.textContent = `Due Date: ${formatDueDate(task.dueDate)}`;
         taskDiv.appendChild(taskDueDate);
+
+        const taskStatusCheckBox = document.createElement("input");
+        taskStatusCheckBox.type = "checkbox";
+        taskStatusCheckBox.checked = task.completed;
+
+        const statusSpan = document.createElement("span");
+        statusSpan.classList.add("status-span");
+        if(task.completed) {
+            taskDiv.classList.add("completed");
+            statusSpan.textContent = "Done ✔";
+            statusSpan.style.color = "green";
+
+            taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
+                child.style.pointerEvents = "none";
+            });
+
+            taskStatusCheckBox.style.pointerEvents = "auto";
+        } else {
+            taskDiv.classList.remove("completed");
+            statusSpan.textContent = "";
+            taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
+                child.style.pointerEvents = "auto";
+            })
+        }
+
+        taskStatusCheckBox.addEventListener("change", () => {
+            task.toggleComplete();
+            saveToLocalStorage();
+            displayProjectTasks(project);
+        });
+
+        taskDiv.appendChild(taskStatusCheckBox);
 
         // Buttons container
         const buttonsContainer = document.createElement("div");

@@ -1,16 +1,35 @@
-html {
+body, html {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
 }
 
 main {
     display: grid;
-    grid-template-columns: 2fr 8fr;
+    grid-template-columns: 2fr 6fr;
     grid-template-areas: "sidebar content";
     height: 100vh;
 }
 
 .sidebar {
-    width: 30vw;
-    height: 100%;
+    grid-area: sidebar;
+}
+
+.content {
+    grid-area: content;
+}
+
+.task.completed {
+    opacity: 0.6;
+}
+
+.task.completed input[type="checkbox"] {
+    filter: none;    
+    opacity: 1;      
+}
+
+.task.disabled {
+    pointer-events: none;
 }
