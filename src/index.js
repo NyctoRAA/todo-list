@@ -7,12 +7,13 @@ import { format, isTomorrow, isYesterday, isToday, differenceInDays } from 'date
 
 const addProjectBtn = document.querySelector(".add-project-btn");
 const submitProjectBtn = document.querySelector(".submit-project-btn");
+const submitTaskBtn = document.querySelector(".submit-task-btn");
 const closeProjectsModalBtn = document.querySelector(".close-project-dialog-btn");
+const closeTasksModalBtn = document.querySelector(".close-task-dialog-btn");
+
 const projectsContainer = document.querySelector(".sidebar-content");
 const newProjectDialog = document.querySelector(".new-project-dialog");
 const newTaskDialog = document.querySelector(".new-task-dialog");
-const submitTaskBtn = document.querySelector(".submit-task-btn");
-const closeTasksModalBtn = document.querySelector(".close-task-dialog-btn");
 const mainPage = document.querySelector(".content");
 
 const projectsLibrary = [];
