@@ -8,17 +8,48 @@ body, html {
 
 main {
     display: grid;
-    grid-template-columns: 2fr 6fr;
+    grid-template-columns: 2fr 9fr;
     grid-template-areas: "sidebar content";
     height: 100vh;
 }
 
 .sidebar {
+    display: flex;
+    flex-direction: column;
     grid-area: sidebar;
+    background-color: rgb(30, 30, 30);
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .content {
     grid-area: content;
+    background-color: rgb(43, 42, 42);
+}
+
+.project-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.project-buttons-container {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.project-container:hover .project-buttons-container {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.project-buttons-container button:hover {
+    transform: scale(1.1);
+    transition: trasnform 0.2s ease-in-out;
 }
 
 .task.completed {
@@ -43,4 +74,10 @@ main {
 
 .task.disabled {
     pointer-events: none;
+}
+
+.trash-icon, .edit-icon {
+    width: 20px;
+    height: 20px;
+    background-color: none;
 }
