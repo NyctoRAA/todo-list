@@ -11,6 +11,7 @@ const submitTaskBtn = document.querySelector(".submit-task-btn");
 const closeProjectsModalBtn = document.querySelector(".close-project-dialog-btn");
 const closeTasksModalBtn = document.querySelector(".close-task-dialog-btn");
 
+const tasksContainerDiv = document.querySelector(".tasks-container");
 const projectsContainer = document.querySelector(".sidebar-content");
 const newProjectDialog = document.querySelector(".new-project-dialog");
 const newTaskDialog = document.querySelector(".new-task-dialog");
@@ -128,7 +129,7 @@ function createProjectUI(project) {
 
     editProjectBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        openTaskModalForProject(project);
+        openEditProjectModal(project);
     })
 
     projectDiv.appendChild(buttonsContainer);
@@ -138,6 +139,32 @@ function createProjectUI(project) {
         if(projectsLibrary.includes(project)) {
             displayProjectTasks(project);
         }
+    });
+}
+
+function openEditProjectModal(project) {
+    const projectTitleInput = document.querySelector("#projectName");
+
+    projectTitleInput.value = project.name;
+
+    newProjectDialog.showModal();
+
+    submitProjectBtn.textContent = "Save Changes";
+
+    submitProjectBtn.replaceWith(submitProjectBtn.cloneNode(true));
+    const newProjectSubmitBtn = document.querySelector(".submit-project-btn");
+
+    newProjectSubmitBtn.addEventListener("click", () => {
+        project.name = projectTitleInput.value;
+
+        projectsContainer.innerHTML = "";
+        projectsLibrary.forEach((proj) => createProjectUI(proj));
+
+        saveToLocalStorage();
+        newProjectDialog.close();
+
+        newProjectSubmitBtn.textContent = "Add Project";
+        newProjectSubmitBtn.addEventListener("click", addProjectHandler);
     });
 }
 
@@ -151,7 +178,8 @@ function deleteProject(project, projectDiv) {
 
     if (currentProject === project) {
         currentProject = null;
-        mainPage.innerHTML = ""; 
+        mainPage.innerHTML = "";
+        tasksContainerDiv.innerHTML = "";
     }
 
     saveToLocalStorage();
@@ -202,6 +230,7 @@ function displayProjectTasks(project) {
     currentProject = project;
 
     mainPage.innerHTML = "";
+    tasksContainerDiv.innerHTML = "";
 
     const projectTitle = document.createElement("h2");
     projectTitle.textContent = `${project.name}'s Tasks`;
@@ -284,9 +313,31 @@ function displayProjectTasks(project) {
 
         deleteTaskBtn.addEventListener("click", (e) => {
             e.stopPropagation();
-            project.tasksContainer.splice(index, 1);
-            saveToLocalStorage();
-            displayProjectTasks(project);
+
+            const dontAskAgain = localStorage.getItem("dontAskDeleteModal");
+            
+            if(dontAskAgain === "true") {
+                deleteTask(project, task);
+            } else {
+                const deleteModal = document.getElementById("delete-confirmation-modal");
+                const confirmBtn = document.getElementById("confirm-delete-btn");
+                const cancelBtn = document.getElementById("cancel-delete-btn");
+                const dontAskAgainCheckbox = document.getElementById("dont-ask-again");
+
+                deleteModal.classList.remove("hidden");
+
+                confirmBtn.onclick = () => {
+                    if(dontAskAgainCheckbox.checked) {
+                        localStorage.setItem("dontAskDeleteModal", "true");
+                    }
+                    deleteTask(project, task);
+                    deleteModal.classList.add("hidden");
+                };
+
+                cancelBtn.onclick = () => {
+                    deleteModal.classList.add("hidden");
+                };
+            }
         });
         
         // Edit task button
@@ -309,7 +360,8 @@ function displayProjectTasks(project) {
         });
 
         taskDiv.appendChild(buttonsContainer);
-        mainPage.appendChild(taskDiv);
+        tasksContainerDiv.appendChild(taskDiv);
+        mainPage.appendChild(tasksContainerDiv);
     });
 
     
@@ -323,6 +375,18 @@ function displayProjectTasks(project) {
 
     mainPage.appendChild(addTaskBtn);
 };
+
+function deleteTask(project, task) {
+    const taskIndex = project.tasksContainer.indexOf(task);
+
+    if(taskIndex > -1 && taskIndex < project.tasksContainer.length) {
+        project.tasksContainer.splice(taskIndex, 1)
+        saveToLocalStorage();
+        displayProjectTasks(project);
+    } else {
+        console.error("Task not found in the tasksContainer.");
+    }
+}
 
 function openEditTaskModal(task, project) {
     const taskTitleInput = document.querySelector("#taskTitle");
@@ -351,7 +415,7 @@ function openEditTaskModal(task, project) {
         displayProjectTasks(project);
         newTaskDialog.close();
 
-        newTaskSubmitBtn.textContent = "Add task";
+        newTaskSubmitBtn.textContent = "Add Task";
         newTaskSubmitBtn.addEventListener("click", addTaskHandler);
     });
 }
@@ -363,7 +427,7 @@ function addTaskHandler(event) {
     if(!form.checkValidity()) {
         form.reportValidity();
         return;
-    }
+    };
 
     const taskTitle = document.querySelector("#taskTitle").value;
     const taskDescription = document.querySelector("#taskDescription").value;
@@ -373,24 +437,36 @@ function addTaskHandler(event) {
     if(currentProject) {
         const task = createTask(taskTitle, taskDescription, taskPriority, taskDueDate);
         currentProject.addTask(task);
+        console.log("Task created:", task);
+        console.log("Tasks in current project:", currentProject.tasksContainer);
         saveToLocalStorage();
     };
 
     displayProjectTasks(currentProject);
     newTaskDialog.close();
+};
+
+function addProjectHandler(event) {
+    event.preventDefault();
+
+    const form = document.querySelector(".add-project-form");
+    if(!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    };
+
+    const projectTitle = document.querySelector("#projectName").value;
+
+    const project = createProject(projectTitle);
+    addProjectToSidebar(project);
+
+    saveToLocalStorage();
+    newProjectDialog.close();
 }
 
 //event listeners
 
-submitProjectBtn.addEventListener("click", () => {
-    const projectName = document.querySelector("#projectName").value;
-    const project = createProject(projectName);
-
-    addProjectToSidebar(project);
-    saveToLocalStorage();
-
-    newProjectDialog.close();
-});
+submitProjectBtn.addEventListener("click", addProjectHandler);
 
 submitTaskBtn.addEventListener("click", addTaskHandler);
 

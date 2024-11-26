@@ -11,7 +11,7 @@
     <main>
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="./images/logo.jpeg" alt="logo" width="30" height="30">
+                <img src="./images/logo.jpeg" alt="logo" width="35" height="35" id="header-logo">
                 <p><a href="https://github.com/NyctoRAA">ra.exe</a></p>
             </div> 
             <div class="sidebar-content">
@@ -25,10 +25,10 @@
                     </div>
                     <div class="dialog-container">
                         <h2>New Project</h2>
-                        <form class="add-project-form hidden" method="dialog">
+                        <form class="add-project-form" method="dialog">
                             <div class="form-section">
                                 <label for="name">Project Name:</label>
-                                <input type="text" name="projectName" id="projectName">
+                                <input type="text" name="projectName" id="projectName" maxlength="20">
                             </div>
                             <button class="submit-project-btn">Submit</button>
                         </form>
@@ -37,7 +37,7 @@
             </footer>
         </div>
         <div class="content">
-
+            <div class="tasks-container"></div>
         </div>
         <dialog class="new-task-dialog" aria-label="New Task">
             <div class="close-dialog">
@@ -71,6 +71,18 @@
                 </form>
             </div>
         </dialog>
+
+        <div class="delete-confirmation-modal hidden">
+            <div class="del-modal-content">
+                <p>Are you sure you want to delete this task?</p>
+                <div class="del-modal-options">
+                    <input type="checkbox" id="dont-ask-again">
+                    <label for="dont-ask-again">Don't ask me again</label>
+                </div>
+                <button id="confirm-delete-btn">Yes</button>
+                <button id="cancel-delete-btn">No</button>
+            </div>
+        </div>
     </main>
 </body>
 </html>

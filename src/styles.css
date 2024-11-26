@@ -1,3 +1,18 @@
+@font-face {
+    font-family: "Normal-Font";
+    src: url(fonts/Kanit/Kanit-Black.ttf);
+}
+
+@font-face {
+    font-family: "Medium-Font";
+    src: url(fonts/Bokor/Bokor-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Special-Font";
+    src: url(fonts/Protest_Revolution/ProtestRevolution-Regular.ttf);
+}
+
 body, html {
     margin: 0;
     padding: 0;
@@ -13,10 +28,31 @@ main {
     height: 100vh;
 }
 
+.hidden {
+    display: none;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.add-project-btn, .add-task-btn {
+    width: 200px;
+    padding: 10px;
+    border-radius: 20px;
+    font-weight: bolder;
+}
+
+.add-project-btn:hover, .add-task-btn:hover {
+    background-color: rgb(64, 64, 64);
+    border-color: gray;
+} 
+
 .sidebar {
     display: flex;
     flex-direction: column;
     grid-area: sidebar;
+    height: 100vh;
     background-color: rgb(30, 30, 30);
 }
 
@@ -28,6 +64,7 @@ main {
 }
 
 .sidebar-header a {
+    font-size: 18px;
     text-decoration: none;
     color: gray;
 }
@@ -36,14 +73,21 @@ main {
     text-decoration: underline;
 }
 
+#header-logo {
+    border-radius: 50%;
+}
+
 .sidebar-content {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    font-family: "Normal-Font", Arial, Helvetica, sans-serif;
+    padding: 20px;
+    gap: 20px;
+    max-width: 300px;
 }
 
 .sidebar-footer {
-    position: absolute;
-    bottom: 0;
     text-align: center;
     padding: 20px;
 }
@@ -53,14 +97,31 @@ main {
     background-color: rgb(43, 42, 42);
 }
 
+.content h2 {
+    font-family: "Special-Font", Arial, Helvetica, sans-serif;
+}
+
 .project-container {
     display: flex;
+    /* flex-wrap: wrap; */
     align-items: center;
     gap: 20px;
-    padding: 15px;
+    padding-left: 15px;
+    border: 1px solid darkgray;
+    border-radius: 20px;
+}
+
+.project-container h2 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+    display: inline-block;
 }
 
 .project-buttons-container {
+    display: flex;
+    gap: 10px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease-in-out;
