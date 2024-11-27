@@ -319,10 +319,10 @@ function displayProjectTasks(project) {
             if(dontAskAgain === "true") {
                 deleteTask(project, task);
             } else {
-                const deleteModal = document.getElementById("delete-confirmation-modal");
-                const confirmBtn = document.getElementById("confirm-delete-btn");
-                const cancelBtn = document.getElementById("cancel-delete-btn");
-                const dontAskAgainCheckbox = document.getElementById("dont-ask-again");
+                const deleteModal = document.querySelector(".delete-confirmation-modal");
+                const confirmBtn = document.querySelector("#confirm-delete-btn");
+                const cancelBtn = document.querySelector("#cancel-delete-btn");
+                const dontAskAgainCheckbox = document.querySelector("#dont-ask-again");
 
                 deleteModal.classList.remove("hidden");
 
