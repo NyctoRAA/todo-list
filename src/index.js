@@ -1,6 +1,7 @@
 import "./styles.css";
 import { createProject } from "./project";
 import { createTask } from "./task";
+// import { saveToLocalStorage, loadFromLocalStorage } from "./storage";
 import trashIconSvg from "./images/trash-icon.svg";
 import editIconSvg from "./images/edit-icon.svg";
 import { format, isTomorrow, isYesterday, isToday, differenceInDays } from 'date-fns';
@@ -80,6 +81,43 @@ function loadFromLocalStorage() {
 loadFromLocalStorage();
 projectsLibrary.forEach((project) => createProjectUI(project));
 
+function showDeleteModal(context, onConfirmCallback) {
+    const deleteModal = document.querySelector(".delete-confirmation-modal");
+    const confirmBtn = document.querySelector("#confirm-delete-btn");
+    const cancelBtn = document.querySelector("#cancel-delete-btn");
+    const dontAskAgainCheckbox = document.querySelector("#dont-ask-again");
+    const deleteMessage = document.querySelector("#delete-modal-message");
+
+    dontAskAgainCheckbox.unchecked;
+
+    const isTask = context === "task";
+    const localStorageKey = isTask 
+        ? "dontAskDeleteModalTask" 
+        : "dontAskDeleteModalProject";
+
+    deleteMessage.textContent = isTask
+        ? "Are you sure you want to delete this task?"
+        : "Are you sure you want to delete this project?";
+
+    if(localStorage.getItem(localStorageKey) === "true") {
+        onConfirmCallback();
+        return;
+    };
+
+    deleteModal.classList.remove("hidden");
+
+    confirmBtn.onclick = () => {
+        if(dontAskAgainCheckbox.checked) {
+            localStorage.setItem(localStorageKey, "true");
+        }
+        onConfirmCallback();
+        deleteModal.classList.add("hidden");
+    };
+
+    cancelBtn.onclick = () => {
+        deleteModal.classList.add("hidden");
+    };
+}
 
 function createProjectUI(project) {
     const projectDiv = document.createElement("div");
@@ -110,7 +148,9 @@ function createProjectUI(project) {
     
     deleteProjectBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        deleteProject(project, projectDiv);
+        showDeleteModal("project", () => {
+            deleteProject(project, projectDiv);
+        }); 
     });
 
     // Edit button
@@ -236,7 +276,7 @@ function displayProjectTasks(project) {
     projectTitle.textContent = `${project.name}'s Tasks`;
     mainPage.appendChild(projectTitle);
 
-    project.tasksContainer.forEach((task, index) => {
+    project.tasksContainer.forEach((task) => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task");
         
@@ -313,31 +353,9 @@ function displayProjectTasks(project) {
 
         deleteTaskBtn.addEventListener("click", (e) => {
             e.stopPropagation();
-
-            const dontAskAgain = localStorage.getItem("dontAskDeleteModal");
-            
-            if(dontAskAgain === "true") {
+            showDeleteModal("task", () => {
                 deleteTask(project, task);
-            } else {
-                const deleteModal = document.querySelector(".delete-confirmation-modal");
-                const confirmBtn = document.querySelector("#confirm-delete-btn");
-                const cancelBtn = document.querySelector("#cancel-delete-btn");
-                const dontAskAgainCheckbox = document.querySelector("#dont-ask-again");
-
-                deleteModal.classList.remove("hidden");
-
-                confirmBtn.onclick = () => {
-                    if(dontAskAgainCheckbox.checked) {
-                        localStorage.setItem("dontAskDeleteModal", "true");
-                    }
-                    deleteTask(project, task);
-                    deleteModal.classList.add("hidden");
-                };
-
-                cancelBtn.onclick = () => {
-                    deleteModal.classList.add("hidden");
-                };
-            }
+            });
         });
         
         // Edit task button

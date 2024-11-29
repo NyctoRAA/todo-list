@@ -13,6 +13,10 @@
     src: url(fonts/Protest_Revolution/ProtestRevolution-Regular.ttf);
 }
 
+:root {
+    --custom-white: #E1DFDA;
+}
+
 body, html {
     margin: 0;
     padding: 0;
@@ -29,7 +33,7 @@ main {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 button:hover {
@@ -37,6 +41,7 @@ button:hover {
 }
 
 .add-project-btn, .add-task-btn {
+    background-color: darkgray;
     width: 200px;
     padding: 10px;
     border-radius: 20px;
@@ -46,7 +51,12 @@ button:hover {
 .add-project-btn:hover, .add-task-btn:hover {
     background-color: rgb(64, 64, 64);
     border-color: gray;
-} 
+    color: var(--custom-white);
+}
+
+.add-task-btn:hover {
+    background-color: #1E1E1E;
+}
 
 .sidebar {
     display: flex;
@@ -94,10 +104,12 @@ button:hover {
 
 .content {
     grid-area: content;
-    background-color: rgb(43, 42, 42);
+    background-color: rgb(48, 47, 47);
+    padding: 20px;
 }
 
 .content h2 {
+    color: var(--custom-white);
     font-family: "Special-Font", Arial, Helvetica, sans-serif;
 }
 
@@ -112,6 +124,7 @@ button:hover {
 }
 
 .project-container h2 {
+    color: var(--custom-white);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -135,6 +148,16 @@ button:hover {
 .project-buttons-container button:hover {
     transform: scale(1.1);
     transition: trasnform 0.2s ease-in-out;
+}
+
+.tasks-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.task {
+    border: 1px solid rgb(30, 30, 30);
+    color: var(--custom-white);
 }
 
 .task.completed {
@@ -165,4 +188,17 @@ button:hover {
     width: 20px;
     height: 20px;
     background-color: none;
+}
+
+.delete-confirmation-modal {
+    position: fixed;    
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }
