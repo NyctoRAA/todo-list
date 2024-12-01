@@ -48,11 +48,12 @@
                 <form class="add-task-form" method="dialog">
                     <div class="form-section">
                         <label for="taskTitle">Title:</label>
-                        <input type="text" name="titleInput" id="taskTitle" required>
+                        <input type="text" name="titleInput" id="taskTitle" maxlength="50" required>
                     </div>
                     <div class="form-section">
                         <label for="taskDescription">Description:</label>
-                        <input type="text" name="descInput" id="taskDescription" required>
+                        <!-- <input type="text" name="descInput" id="taskDescription" maxlength="300" required> -->
+                         <textarea name="descInput" id="taskDescription" maxlength="300" required></textarea>
                     </div>
                     <div class="form-section">
                         <label for="dueDate">Due Date:</label>
