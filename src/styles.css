@@ -164,8 +164,12 @@ button:hover {
 }
 
 .task {
-    border: 1px solid rgb(30, 30, 30);
+    border: 0.5px solid var(--custom-white);
+    border-radius: 15px;
+    box-shadow: 1px 2px 1px 1px var(--custom-white);
+    background-color: rgb(30, 30, 30);
     color: var(--custom-white);
+    padding: 20px;
 }
 
 .task.completed {
