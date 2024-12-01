@@ -40,6 +40,8 @@ button:hover {
     cursor: pointer;
 }
 
+
+
 .add-project-btn, .add-task-btn {
     background-color: darkgray;
     width: 200px;
