@@ -281,26 +281,34 @@ function displayProjectTasks(project) {
         taskDiv.classList.add("task");
         
         const taskTitle = document.createElement("p");
+        taskTitle.classList.add("taskTitle");
         taskTitle.textContent = task.title;
         taskDiv.appendChild(taskTitle);
 
         const taskDescription = document.createElement("p");
+        taskDescription.classList.add("taskDescription");
         taskDescription.textContent = task.description;
         taskDiv.appendChild(taskDescription);
 
         const taskPriority = document.createElement("p");
+        taskPriority.classList.add("taskPriority");
         if(task.priority == "High") {
-            taskPriority.style.color = "DarkRed";
-        }   
+            taskPriority.style.backgroundColor = "Salmon";
+            taskPriority.style.color = "Black";
+        }
+        taskPriority.style.backgroundColor = "#FFD85F";   
+        taskPriority.style.color = "Black";
         taskPriority.textContent = task.priority;
         taskDiv.appendChild(taskPriority);
 
 
         const taskDueDate = document.createElement("p");
-        taskDueDate.textContent = `Due Date: ${formatDueDate(task.dueDate)}`;
+        taskDueDate.classList.add("taskDueDate");
+        taskDueDate.textContent = `${formatDueDate(task.dueDate)}`;
         taskDiv.appendChild(taskDueDate);
 
         const taskStatusCheckBox = document.createElement("input");
+        taskStatusCheckBox.classList.add("taskCheckBox");
         taskStatusCheckBox.type = "checkbox";
         taskStatusCheckBox.checked = task.completed;
 

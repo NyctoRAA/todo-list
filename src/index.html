@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List</title>
+    <title>Nycto Notes</title>
     <link rel="icon" href="./images/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
 </head>
@@ -13,12 +13,15 @@
             <div class="sidebar-header">
                 <img src="./images/logo.jpeg" alt="logo" width="35" height="35" id="header-logo">
                 <p><a href="https://github.com/NyctoRAA">ra.exe</a></p>
+                <h1 class="app-name-title">Nycto Notes</h1>
             </div> 
             <div class="sidebar-content">
-
+                <p class="sidebar-title">Notes</p>
+                
+                <p class="sidebar-title">Projects</p>
             </div>
             <footer class="sidebar-footer">
-                <button class="add-project-btn">Add Project</button>
+                <button class="add-project-btn">+</button>
                 <dialog class="new-project-dialog" aria-label="New Project">
                     <div class="close-dialog">
                         <button class="close-project-dialog-btn">X</button>
@@ -62,7 +65,7 @@
                     <div class="form-section">
                         <label for="taskPriority">Priority:</label>
                         <select name="priorityInput" id="taskPriority">
-                            <option value="Normal">Normal</option>
+                            <option value="Low">Low</option>
                             <option value="High">High</option>
                         </select>
                     </div>

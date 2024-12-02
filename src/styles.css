@@ -170,6 +170,7 @@ button:hover {
     background-color: rgb(30, 30, 30);
     color: var(--custom-white);
     padding: 20px;
+    min-width: 200px;
 }
 
 .task.completed {
@@ -194,6 +195,21 @@ button:hover {
 
 .task.disabled {
     pointer-events: none;
+}
+
+.taskTitle {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.taskDescription {
+
+}
+
+.taskPriority {
+    width: fit-content;
+    padding: 3px 10px 3px 10px;
+    border-radius: 5px;
 }
 
 .trash-icon, .edit-icon {
