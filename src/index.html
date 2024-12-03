@@ -9,35 +9,30 @@
 </head>
 <body>
     <main>
-        <div class="sidebar">
+        <div class="header">
+            <button id="hamburger-btn" aria-label="Toggle Menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+        <div class="sidebar hidden">
             <div class="sidebar-header">
                 <img src="./images/logo.jpeg" alt="logo" width="35" height="35" id="header-logo">
                 <p><a href="https://github.com/NyctoRAA">ra.exe</a></p>
                 <h1 class="app-name-title">Nycto Notes</h1>
             </div> 
             <div class="sidebar-content">
-                <p class="sidebar-title">Notes</p>
-                
-                <p class="sidebar-title">Projects</p>
+                <h3 class="sidebar-title">Notes</h3>
+                <ul class="notes-ul"></ul>
+                <div class="projects header">
+                    <h3 class="sidebar-title">Projects</h3>
+                    <button class="add-project-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                          </svg>                          
+                    </button>
+                </div>
             </div>
-            <footer class="sidebar-footer">
-                <button class="add-project-btn">+</button>
-                <dialog class="new-project-dialog" aria-label="New Project">
-                    <div class="close-dialog">
-                        <button class="close-project-dialog-btn">X</button>
-                    </div>
-                    <div class="dialog-container">
-                        <h2>New Project</h2>
-                        <form class="add-project-form" method="dialog">
-                            <div class="form-section">
-                                <label for="name">Project Name:</label>
-                                <input type="text" name="projectName" id="projectName" maxlength="20">
-                            </div>
-                            <button class="submit-project-btn">Submit</button>
-                        </form>
-                    </div>
-                </dialog>
-            </footer>
         </div>
         <div class="content">
             <div class="tasks-container"></div>

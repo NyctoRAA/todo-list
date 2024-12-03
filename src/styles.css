@@ -40,28 +40,58 @@ button:hover {
     cursor: pointer;
 }
 
-.add-project-btn, .add-task-btn {
-    background-color: darkgray;
-    width: 200px;
-    padding: 10px;
-    border-radius: 20px;
-    font-weight: bolder;
-}
-
-.add-project-btn:hover, .add-task-btn:hover {
-    background-color: rgb(64, 64, 64);
-    border-color: gray;
-    color: var(--custom-white);
-}
-
 .add-task-btn {
     position: absolute;
     bottom: 0;
     margin: 20px;
 }
 
-.add-task-btn:hover {
-    background-color: #1E1E1E;
+.projectName-input {
+    display: block;
+    margin: 10px;
+    padding: 5px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+
+
+.add-project-btn {
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    color: var(--custom-white);
+    font-size: 2em;
+}
+
+.add-project-btn svg {
+    pointer-events: none;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+}
+
+#hamburger-btn {
+    background: none;
+    border: none;
+}
+
+.hamburger-icon {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    position: relative;
+    transition: transform 0.3s ease;
 }
 
 .sidebar {
