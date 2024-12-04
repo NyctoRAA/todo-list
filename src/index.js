@@ -7,11 +7,14 @@ import editIconSvg from "./images/edit-icon.svg";
 import { format, isTomorrow, isYesterday, isToday, differenceInDays } from 'date-fns';
 
 const addProjectBtn = document.querySelector(".add-project-btn");
+const submitProjectBtn = document.querySelector(".submit-project-btn");
 const submitTaskBtn = document.querySelector(".submit-task-btn");
+const closeProjectsModalBtn = document.querySelector(".close-project-dialog-btn");
 const closeTasksModalBtn = document.querySelector(".close-task-dialog-btn");
 
 const tasksContainerDiv = document.querySelector(".tasks-container");
 const projectsContainer = document.querySelector(".sidebar-content");
+const newProjectDialog = document.querySelector(".new-project-dialog");
 const newTaskDialog = document.querySelector(".new-task-dialog");
 const mainPage = document.querySelector(".content");
 
@@ -166,7 +169,7 @@ function createProjectUI(project) {
 
     editProjectBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        editProjectHandler(project, projectDiv);
+        openEditProjectModal(project);
     })
 
     projectDiv.appendChild(buttonsContainer);
@@ -176,6 +179,32 @@ function createProjectUI(project) {
         if(projectsLibrary.includes(project)) {
             displayProjectTasks(project);
         }
+    });
+}
+
+function openEditProjectModal(project) {
+    const projectTitleInput = document.querySelector("#projectName");
+
+    projectTitleInput.value = project.name;
+
+    newProjectDialog.showModal();
+
+    submitProjectBtn.textContent = "Save Changes";
+
+    submitProjectBtn.replaceWith(submitProjectBtn.cloneNode(true));
+    const newProjectSubmitBtn = document.querySelector(".submit-project-btn");
+
+    newProjectSubmitBtn.addEventListener("click", () => {
+        project.name = projectTitleInput.value;
+
+        projectsContainer.innerHTML = "";
+        projectsLibrary.forEach((proj) => createProjectUI(proj));
+
+        saveToLocalStorage();
+        newProjectDialog.close();
+
+        newProjectSubmitBtn.textContent = "Add Project";
+        newProjectSubmitBtn.addEventListener("click", addProjectHandler);
     });
 }
 
@@ -194,6 +223,11 @@ function deleteProject(project, projectDiv) {
     }
 
     saveToLocalStorage();
+}
+
+function openTaskModalForProject(project) {
+    currentProject = project;
+    newTaskDialog.showModal();
 }
 
 function addProjectToSidebar(project) {
@@ -360,7 +394,11 @@ function displayProjectTasks(project) {
 
     // Add task button
     const addTaskBtn = document.createElement("button");
-    addTaskBtn.textContent = "+";
+    addTaskBtn.innerHTML = 
+        `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>`;
     addTaskBtn.classList.add("add-task-btn");
 
     addTaskBtn.addEventListener("click", () => openTaskModalForProject(project));
@@ -438,128 +476,66 @@ function addTaskHandler(event) {
     newTaskDialog.close();
 };
 
-function addProjectHandler() { 
-    if(document.querySelector(".projectName-input")) return;
+function addProjectHandler(event) {
+    event.preventDefault();
 
-    const inputContainer = document.createElement("div");
-    inputContainer.classList.add("project-input-container");
+    const form = document.querySelector(".add-project-form");
+    if(!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    };
 
-    const input = document.createElement("input");
-    input.type = "text";
-    input.required = true;
-    input.placeholder = "Project Name...";
-    input.classList.add("projectName-input");
+    const projectTitle = document.querySelector("#projectName").value;
 
-    const submitButton = document.createElement("button");
-    submitButton.textContent = "->";
-    submitButton.classList.add("submit-project-btn");
+    const project = createProject(projectTitle);
+    addProjectToSidebar(project);
 
-    inputContainer.appendChild(input);
-    inputContainer.appendChild(submitButton);
-    projectsContainer.appendChild(inputContainer);
-
-    input.focus();
-
-    input.addEventListener("keydown", (e) => {
-        if(e.key === "Enter") {
-            saveNewProject(input, inputContainer);
-        }
-    });
-
-    submitButton.addEventListener("click", () => {
-        saveNewProject(input, inputContainer);
-    })
-}
-
-function editProjectHandler(project, projectDiv) {
-    const projectTitle = projectDiv.querySelector("h2");
-
-    const input = document.createElement("input");
-    input.type = "text";
-    input.required = true;
-    input.value = project.name;
-    input.classList.add("projectName-input");
-
-    const submitButton = document.createElement("button");
-    submitButton.textContent = "->";
-    submitButton.classList.add("submit-project-btn");
-
-    projectDiv.replaceChild(input, projectTitle);
-    projectDiv.appendChild(submitButton);
-
-    input.focus();
-
-    input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            saveProjectEdit(input, project, projectDiv);
-        }
-    });
-
-    submitButton.addEventListener("click", () => {
-        saveProjectEdit(input, project, projectDiv);
-    })
-}
-
-function saveProjectEdit(input, project, projectDiv) {
-    const newName = input.value.trim();
-    const submitBtn = document.querySelector(".submit-project-btn");
-    if(newName) {
-        project.name = newName;
-        saveToLocalStorage();
-
-        const projectTitle = document.createElement("h2");
-        projectTitle.textContent = newName;
-        projectDiv.replaceChild(projectTitle, input);
-    } else {
-        const projectTitle = document.createElement("h2");
-        projectTitle.textContent = project.name;
-        projectDiv.replaceChild(projectTitle, input);
-    }
-
-    submitBtn.remove();
-}
-
-function saveNewProject(input) {
-    const projectName = input.value.trim();
-    const submitBtn = document.querySelector(".submit-project-btn");
-    if(projectName) {
-        const newProject = createProject(projectName);
-        addProjectToSidebar(newProject);
-        saveToLocalStorage();
-    }
-
-    input.remove();
-    submitBtn.remove();
-
+    saveToLocalStorage();
+    newProjectDialog.close();
 }
 
 //event listeners
 
+submitProjectBtn.addEventListener("click", addProjectHandler);
+
 submitTaskBtn.addEventListener("click", addTaskHandler);
 
 // Show & close modals listeners
-addProjectBtn.addEventListener("click", addProjectHandler);
+addProjectBtn.addEventListener("click", () => newProjectDialog.showModal());
+closeProjectsModalBtn.addEventListener("click", () => newProjectDialog.close());
 closeTasksModalBtn.addEventListener("click", () => newTaskDialog.close());
 
+// Close modals on outside click
 window.addEventListener('click', function(event) {
-    // Verifica se clicou fora do campo de criação de novo projeto
-    const projectInput = document.querySelector(".projectName-input");
-    if (projectInput && !projectInput.contains(event.target) && event.target !== addProjectBtn) {
-        projectInput.remove();
-    }
-
-    // Verifica se clicou fora do campo de edição do projeto
-    const projectEditInput = document.querySelector(".project-input");
-    if (projectEditInput && !projectEditInput.contains(event.target)) {
-        const projectDiv = projectEditInput.closest(".project-container");
-        const projectTitle = document.createElement("h2");
-        projectTitle.textContent = projectEditInput.value || projectEditInput.defaultValue;
-        projectDiv.replaceChild(projectTitle, projectEditInput);
-    }
-
-    // Fecha o modal de tarefa se o clique for fora do modal
-    if (event.target === newTaskDialog) {
-        newTaskDialog.close();
-    }
+    if (event.target == newProjectDialog) newProjectDialog.close();
+    if (event.target == newTaskDialog) newTaskDialog.close();
 });
 
+// Home page title functionalities
+const homePageTitle = document.querySelector("#homePage-title");
+
+function hideHomePageTitle() {
+    if(homePageTitle) {
+        homePageTitle.classList.add("hidden");
+    }
+};
+
+function showHomePageTitle() {
+    if(homePageTitle) {
+        homePageTitle.classList.remove("hidden");
+    }
+}
+
+const sidebarProjects = document.querySelectorAll(".sidebar .project-container");
+
+sidebarProjects.forEach(project => {
+    project.addEventListener("click", () => {
+            hideHomePageTitle();
+    });
+});
+
+
+const homeBtn = document.querySelector(".home-btn");
+if(homeBtn) {
+    homeBtn.addEventListener("click", showHomePageTitle);
+}

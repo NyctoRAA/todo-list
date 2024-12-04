@@ -28,7 +28,10 @@ body, html {
 main {
     display: grid;
     grid-template-columns: 2fr 9fr;
-    grid-template-areas: "sidebar content";
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 
+    "header header"
+    "sidebar content";
     height: 100vh;
 }
 
@@ -40,130 +43,40 @@ button:hover {
     cursor: pointer;
 }
 
-.add-task-btn {
-    position: absolute;
-    bottom: 0;
-    margin: 20px;
-}
-
-.projectName-input {
-    display: block;
-    margin: 10px;
-    padding: 5px;
-    width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: all 0.3s;
-}
-
-
-
-.add-project-btn {
-    width: 40px;
-    height: 40px;
-    background: none;
-    border: none;
-    color: var(--custom-white);
-    font-size: 2em;
-}
-
-.add-project-btn svg {
-    pointer-events: none;
-}
-
-.header {
+header {
+    grid-area: header;
     display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
+    justify-content: space-between;
 }
 
-#hamburger-btn {
-    background: none;
-    border: none;
-}
-
-.hamburger-icon {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    position: relative;
-    transition: transform 0.3s ease;
-}
-
-.hamburger-icon::before,
-.hamburger-icon::after {
-    content: "";
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    position: absolute;
-    left: 0;
-    transition: transform 0.3s ease;
-}
-
-.hamburger-icon::before {
-    top: -8px;
-}
-
-.hamburger-icon::after {
-    top: 8px;
-}
-
-.sidebar {
-    /* display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: rgb(30, 30, 30); */
-    
-    background-color: rgb(30, 30, 30); 
-    color: var(--custom-white);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    padding-top: 60px;
-    grid-area: sidebar;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    
-}
-
-.sidebar.visible {
-    transform: translateX(0);
-}
-
-.sidebar .hidden {
-    transform: translateX(-100%);
-}
-
-#hamburger-btn.active .hamburger-icon {
-    transform: rotate(45deg);
-}
-
-.sidebar-header {
+.header-appInfo {
     display: flex;
-    align-items: center;
-    padding: 10px;
-    gap: 10px;
 }
 
-.sidebar-header a {
+.header-author {
+    display: flex;
+}
+
+.header-author a {
     font-size: 18px;
     text-decoration: none;
     color: gray;
 }
 
-.sidebar-header a:hover {
+.header-author a:hover {
     text-decoration: underline;
 }
 
-#header-logo {
+#author-logo {
     border-radius: 50%;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    grid-area: sidebar;
+    height: 100vh;
+    background-color: rgb(30, 30, 30);
 }
 
 .sidebar-content {
@@ -302,4 +215,33 @@ button:hover {
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+
+.title-animation {
+    font-size: 3rem;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--custom-white);
+    overflow: hidden;
+    border-right: 2px solid var(--custom-white);
+    white-space: nowrap;
+    width: 0;
+    animation: typing 4s steps(20, end), blink 0.5s step-end infinite alternate;
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    from {
+        border-color: transparent;
+    }
+    to {
+        border-color: var(--custom-white);
+    }
 }
