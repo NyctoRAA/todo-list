@@ -15,6 +15,7 @@
 
 :root {
     --custom-white: #E1DFDA;
+    --borders-white: rgba(245, 245, 245, 0.377);
 }
 
 body, html {
@@ -47,14 +48,16 @@ header {
     grid-area: header;
     display: flex;
     justify-content: space-between;
+    background-color: rgb(30, 30, 30);
+    border-bottom: 0.7px solid var(--borders-white);
 }
 
-.header-appInfo {
+.header-appInfo, .header-author {
     display: flex;
-}
-
-.header-author {
-    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    color: var(--custom-white);
 }
 
 .header-author a {
@@ -67,7 +70,7 @@ header {
     text-decoration: underline;
 }
 
-#author-logo {
+#author-logo, #app-logo {
     border-radius: 50%;
 }
 
@@ -77,13 +80,14 @@ header {
     grid-area: sidebar;
     height: 100vh;
     background-color: rgb(30, 30, 30);
+    border-right: 0.7px solid var(--borders-white);
 }
 
 .sidebar-content {
     display: flex;
     flex-direction: column;
     flex: 1;
-    font-family: "Normal-Font", Arial, Helvetica, sans-serif;
+    /* font-family: "Normal-Font", Arial, Helvetica, sans-serif; */
     padding: 20px;
     gap: 20px;
     max-width: 300px;
@@ -106,15 +110,18 @@ header {
     text-decoration: underline;
 }
 
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .project-container {
     display: flex;
     /* flex-wrap: wrap; */
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding-left: 15px;
-    border: 1px solid darkgray;
-    border-radius: 20px;
 }
 
 .project-container h2 {
@@ -198,6 +205,29 @@ header {
     border-radius: 5px;
 }
 
+.add-project-btn, .add-task-btn {
+    border: none;
+    background: none;
+    color: var(--custom-white);
+    height: 20px;
+    width: 20px;
+    padding: 0;
+}
+
+svg {
+    max-width: 100%;
+}
+
+.add-buttons-svg {
+    max-height: 20px;
+    border-radius: 6px;
+    transition: backgroud-color 0.2s ease;
+}
+
+.add-buttons-svg:hover {
+    background-color: darkgray;
+}
+
 .trash-icon, .edit-icon {
     width: 20px;
     height: 20px;
@@ -218,7 +248,7 @@ header {
 }
 
 .title-animation {
-    font-size: 3rem;
+    font-size: 10rem;
     color: transparent;
     -webkit-text-stroke: 2px var(--custom-white);
     overflow: hidden;

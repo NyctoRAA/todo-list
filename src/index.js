@@ -267,6 +267,9 @@ function displayProjectTasks(project) {
         return;
     }
 
+    hideHomePageTitle();
+    stopTitleAnimation();
+
     currentProject = project;
 
     mainPage.innerHTML = "";
@@ -393,9 +396,11 @@ function displayProjectTasks(project) {
     
 
     // Add task button
+    const headerAuthorDiv = document.querySelector(".header-author");
+
     const addTaskBtn = document.createElement("button");
     addTaskBtn.innerHTML = 
-        `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        `<svg class="add-buttons-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="12" y1="5" x2="12" y2="19"></line>
         <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>`;
@@ -403,7 +408,7 @@ function displayProjectTasks(project) {
 
     addTaskBtn.addEventListener("click", () => openTaskModalForProject(project));
 
-    mainPage.appendChild(addTaskBtn);
+    headerAuthorDiv.appendChild(addTaskBtn);
 };
 
 function deleteTask(project, task) {
@@ -511,8 +516,39 @@ window.addEventListener('click', function(event) {
     if (event.target == newTaskDialog) newTaskDialog.close();
 });
 
-// Home page title functionalities
+// Home page functionalities
+
 const homePageTitle = document.querySelector("#homePage-title");
+
+function restartTitleAnimation(element, animationClass) {
+    if (!element) return;
+    element.classList.remove(animationClass);
+    void element.offsetWidth;
+    element.classList.add(animationClass);
+    element.addEventListener("animationend", () => {
+        element.classList.remove(animationClass); // Remove a classe após a animação terminar
+        void element.offsetWidth; // Força o reflow para reiniciar a animação
+        element.classList.add(animationClass); // Adiciona a classe para reiniciar a animação
+    });
+    
+}
+
+let animationInterval;
+
+function startTitleAnimation() {
+    stopTitleAnimation();
+    restartTitleAnimation(homePageTitle, "title-animation");
+    animationInterval = setInterval(() => {
+        restartTitleAnimation(homePageTitle, "title-animation");
+    }, 3000);
+};
+
+function stopTitleAnimation() {
+    if(animationInterval) {
+        clearInterval(animationInterval);
+        animationInterval = null;
+    }
+}
 
 function hideHomePageTitle() {
     if(homePageTitle) {
@@ -523,6 +559,7 @@ function hideHomePageTitle() {
 function showHomePageTitle() {
     if(homePageTitle) {
         homePageTitle.classList.remove("hidden");
+        restartTitleAnimation(homePageTitle, "title-animation");
     }
 }
 
@@ -530,12 +567,46 @@ const sidebarProjects = document.querySelectorAll(".sidebar .project-container")
 
 sidebarProjects.forEach(project => {
     project.addEventListener("click", () => {
-            hideHomePageTitle();
+        stopTitleAnimation();
+        hideHomePageTitle();
     });
 });
 
 
 const homeBtn = document.querySelector(".home-btn");
-if(homeBtn) {
-    homeBtn.addEventListener("click", showHomePageTitle);
+
+if (homeBtn) {
+    homeBtn.addEventListener("click", () => {
+        const addTaskBtn = document.querySelector(".add-task-btn");
+        const titleContainer = document.querySelector(".title-container"); // Ajuste o seletor se necessário.
+        const headerAuthor = document.querySelector(".header-author");
+
+        // Remove o botão de adicionar tarefa
+        if (addTaskBtn && headerAuthor) {
+            headerAuthor.removeChild(addTaskBtn);
+        }
+
+        // Limpa a área principal
+        if (mainPage) {
+            mainPage.innerHTML = "";
+        }
+
+        // Reinicia o estado da animação do título
+        if (titleContainer) {
+            // Remove a classe de animação para reiniciar
+            titleContainer.classList.remove("title-animation");
+
+            // Força o reflow para reiniciar a animação
+            void titleContainer.offsetWidth;
+
+            // Reaplica a classe de animação
+            titleContainer.classList.add("title-animation");
+        } else {
+            // Caso o título não exista, cria e inicializa a animação
+            showHomePageTitle(); // Função que cria o título
+        }
+
+        // Sempre inicializa a animação
+        startTitleAnimation(); // A função de animação personalizada
+    });
 }
