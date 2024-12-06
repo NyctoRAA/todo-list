@@ -1,6 +1,26 @@
 @font-face {
-    font-family: "Normal-Font";
-    src: url(fonts/Kanit/Kanit-Black.ttf);
+    font-family: "Inter-Regular";
+    src: url(fonts/Inter/Inter_24pt-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Bold";
+    src: url(fonts/Inter/Inter_18pt-Bold.ttf);
+}
+
+@font-face {
+    font-family: "Inter-ExtraBold";
+    src: url(fonts/Inter/Inter_24pt-ExtraBold.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Light";
+    src: url(fonts/Inter/Inter_24pt-Light.ttf);
+}
+
+@font-face {
+    font-family: "Inter-Italic";
+    src: url(fonts/Inter/Inter_24pt-Italic.ttf);
 }
 
 @font-face {
@@ -13,6 +33,8 @@
     src: url(fonts/Protest_Revolution/ProtestRevolution-Regular.ttf);
 }
 
+
+
 :root {
     --custom-white: #E1DFDA;
     --borders-white: rgba(245, 245, 245, 0.377);
@@ -24,11 +46,13 @@ body, html {
     box-sizing: border-box;
     height: 100%;
     width: 100%;
+    line-height: 1.5;
+    font-family: "Inter-Regular", Arial, Helvetica, sans-serif;
 }
 
 main {
     display: grid;
-    grid-template-columns: 2fr 9fr;
+    grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
     grid-template-areas: 
     "header header"
@@ -42,6 +66,10 @@ main {
 
 button:hover {
     cursor: pointer;
+}
+
+.home-btn {
+    width: fit-content;
 }
 
 header {
@@ -79,23 +107,38 @@ header {
     flex-direction: column;
     grid-area: sidebar;
     height: 100vh;
+    max-width: 280px;
     background-color: rgb(30, 30, 30);
     border-right: 0.7px solid var(--borders-white);
+    overflow-y: auto;
+}
+
+.sidebar-title {
+    font-family: "Inter-Bold", Arial, Helvetica, sans-serif;
+    font-size: 1.3em;
+    color: var(--custom-white);
 }
 
 .sidebar-content {
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* font-family: "Normal-Font", Arial, Helvetica, sans-serif; */
     padding: 20px;
     gap: 20px;
     max-width: 300px;
+    color: lightgray;
 }
 
 .sidebar-footer {
     text-align: center;
     padding: 20px;
+}
+
+.projects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
 }
 
 .content {
@@ -118,19 +161,29 @@ header {
 
 .project-container {
     display: flex;
-    /* flex-wrap: wrap; */
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    border-radius: 15px;
+    padding: 0px 6px 0px 6px;
+    transition: background-color 0.6s ease, transform 0.6s ease;
+}
+
+.project-container:hover {
+    background-color: rgba(211, 211, 211, 0.251);
 }
 
 .project-container h2 {
-    color: var(--custom-white);
+    font-size: 16px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 80%;
     display: inline-block;
+}
+
+.project-container:hover {
+    cursor: pointer;
 }
 
 .project-buttons-container {
@@ -209,29 +262,38 @@ header {
     border: none;
     background: none;
     color: var(--custom-white);
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 30px;
     padding: 0;
 }
 
-svg {
-    max-width: 100%;
-}
-
 .add-buttons-svg {
-    max-height: 20px;
+    max-height: 25px;
     border-radius: 6px;
-    transition: backgroud-color 0.2s ease;
+    transition: background-color 0.6s ease, transform 0.6s ease;
 }
 
 .add-buttons-svg:hover {
-    background-color: darkgray;
+    background-color: rgba(169, 169, 169, 0.304);
+}
+
+.delete-project-btn, .edit-project-btn {
+    background: none;
+    border: none;
 }
 
 .trash-icon, .edit-icon {
-    width: 20px;
-    height: 20px;
-    background-color: none;
+    background: none; 
+    border: none; 
+    padding: 0; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.trash-icon:hover, .edit-icon:hover {
+    transform: scale(1.1); 
+    transition: transform 0.2s ease-in-out;
 }
 
 .delete-confirmation-modal {
@@ -247,31 +309,6 @@ svg {
     z-index: 999;
 }
 
-.title-animation {
-    font-size: 10rem;
-    color: transparent;
-    -webkit-text-stroke: 2px var(--custom-white);
-    overflow: hidden;
-    border-right: 2px solid var(--custom-white);
-    white-space: nowrap;
-    width: 0;
-    animation: typing 4s steps(20, end), blink 0.5s step-end infinite alternate;
-}
-
-@keyframes typing {
-    from {
-        width: 0;
-    }
-    to {
-        width: 100%;
-    }
-}
-
-@keyframes blink {
-    from {
-        border-color: transparent;
-    }
-    to {
-        border-color: var(--custom-white);
-    }
+#homePage-title {
+    color: var(--custom-white);
 }

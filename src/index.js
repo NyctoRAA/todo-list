@@ -267,9 +267,6 @@ function displayProjectTasks(project) {
         return;
     }
 
-    hideHomePageTitle();
-    stopTitleAnimation();
-
     currentProject = project;
 
     mainPage.innerHTML = "";
@@ -517,96 +514,3 @@ window.addEventListener('click', function(event) {
 });
 
 // Home page functionalities
-
-const homePageTitle = document.querySelector("#homePage-title");
-
-function restartTitleAnimation(element, animationClass) {
-    if (!element) return;
-    element.classList.remove(animationClass);
-    void element.offsetWidth;
-    element.classList.add(animationClass);
-    element.addEventListener("animationend", () => {
-        element.classList.remove(animationClass); // Remove a classe após a animação terminar
-        void element.offsetWidth; // Força o reflow para reiniciar a animação
-        element.classList.add(animationClass); // Adiciona a classe para reiniciar a animação
-    });
-    
-}
-
-let animationInterval;
-
-function startTitleAnimation() {
-    stopTitleAnimation();
-    restartTitleAnimation(homePageTitle, "title-animation");
-    animationInterval = setInterval(() => {
-        restartTitleAnimation(homePageTitle, "title-animation");
-    }, 3000);
-};
-
-function stopTitleAnimation() {
-    if(animationInterval) {
-        clearInterval(animationInterval);
-        animationInterval = null;
-    }
-}
-
-function hideHomePageTitle() {
-    if(homePageTitle) {
-        homePageTitle.classList.add("hidden");
-    }
-};
-
-function showHomePageTitle() {
-    if(homePageTitle) {
-        homePageTitle.classList.remove("hidden");
-        restartTitleAnimation(homePageTitle, "title-animation");
-    }
-}
-
-const sidebarProjects = document.querySelectorAll(".sidebar .project-container");
-
-sidebarProjects.forEach(project => {
-    project.addEventListener("click", () => {
-        stopTitleAnimation();
-        hideHomePageTitle();
-    });
-});
-
-
-const homeBtn = document.querySelector(".home-btn");
-
-if (homeBtn) {
-    homeBtn.addEventListener("click", () => {
-        const addTaskBtn = document.querySelector(".add-task-btn");
-        const titleContainer = document.querySelector(".title-container"); // Ajuste o seletor se necessário.
-        const headerAuthor = document.querySelector(".header-author");
-
-        // Remove o botão de adicionar tarefa
-        if (addTaskBtn && headerAuthor) {
-            headerAuthor.removeChild(addTaskBtn);
-        }
-
-        // Limpa a área principal
-        if (mainPage) {
-            mainPage.innerHTML = "";
-        }
-
-        // Reinicia o estado da animação do título
-        if (titleContainer) {
-            // Remove a classe de animação para reiniciar
-            titleContainer.classList.remove("title-animation");
-
-            // Força o reflow para reiniciar a animação
-            void titleContainer.offsetWidth;
-
-            // Reaplica a classe de animação
-            titleContainer.classList.add("title-animation");
-        } else {
-            // Caso o título não exista, cria e inicializa a animação
-            showHomePageTitle(); // Função que cria o título
-        }
-
-        // Sempre inicializa a animação
-        startTitleAnimation(); // A função de animação personalizada
-    });
-}
