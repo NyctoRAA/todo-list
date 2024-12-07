@@ -88,6 +88,10 @@ header {
     color: var(--custom-white);
 }
 
+.app-name-title {
+    margin: 10px;
+}
+
 .header-author a {
     font-size: 18px;
     text-decoration: none;
@@ -117,6 +121,8 @@ header {
     font-family: "Inter-Bold", Arial, Helvetica, sans-serif;
     font-size: 1.3em;
     color: var(--custom-white);
+    margin: 0;
+    padding: 0px 10px;
 }
 
 .sidebar-content {
@@ -139,6 +145,27 @@ header {
     align-items: center;
     justify-content: space-between;
     padding-right: 10px;
+}
+
+.notes-ul {
+    padding: 0;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+}
+
+.notes-ul li {
+    margin: 8px 0px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    list-style: none;
+    font-size: 14px;
+    transition: background-color 0.6s ease, transform 0.6s ease;
+}
+
+.notes-ul li:hover {
+    cursor: pointer;
+    background-color: rgba(211, 211, 211, 0.251);
 }
 
 .content {
@@ -165,7 +192,7 @@ header {
     justify-content: space-between;
     gap: 20px;
     border-radius: 15px;
-    padding: 0px 6px 0px 6px;
+    padding: 0px 10px;
     transition: background-color 0.6s ease, transform 0.6s ease;
 }
 
