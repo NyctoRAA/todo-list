@@ -261,6 +261,154 @@ function formatDueDate(date) {
     return format(taskDate, 'EEE MMM dd yyyy');
 }
 
+// function displayProjectTasks(project) {
+//     if (!project) {
+//         console.error("Project not found or undefined!");
+//         return;
+//     }
+
+//     currentProject = project;
+
+//     mainPage.innerHTML = "";
+//     tasksContainerDiv.innerHTML = "";
+
+//     const projectTitle = document.createElement("h2");
+//     projectTitle.textContent = `${project.name}'s Tasks`;
+//     mainPage.appendChild(projectTitle);
+
+//     project.tasksContainer.forEach((task) => {
+//         const taskDiv = document.createElement("div");
+//         taskDiv.classList.add("task");
+        
+//         const taskTitle = document.createElement("p");
+//         taskTitle.classList.add("taskTitle");
+//         taskTitle.textContent = task.title;
+//         taskDiv.appendChild(taskTitle);
+
+//         const taskDescription = document.createElement("p");
+//         taskDescription.classList.add("taskDescription");
+//         taskDescription.textContent = task.description;
+//         taskDiv.appendChild(taskDescription);
+
+//         const taskPriority = document.createElement("p");
+//         taskPriority.classList.add("taskPriority");
+//         if(task.priority == "High") {
+//             taskPriority.style.backgroundColor = "Salmon";
+//             taskPriority.style.color = "Black";
+//         }
+//         taskPriority.style.backgroundColor = "#FFD85F";   
+//         taskPriority.style.color = "Black";
+//         taskPriority.textContent = task.priority;
+//         taskDiv.appendChild(taskPriority);
+
+
+//         const taskDueDate = document.createElement("p");
+//         taskDueDate.classList.add("taskDueDate");
+//         taskDueDate.textContent = `${formatDueDate(task.dueDate)}`;
+//         taskDiv.appendChild(taskDueDate);
+
+//         const taskStatusCheckBox = document.createElement("input");
+//         taskStatusCheckBox.classList.add("taskCheckBox");
+//         taskStatusCheckBox.type = "checkbox";
+//         taskStatusCheckBox.checked = task.completed;
+
+//         const statusSpan = document.createElement("span");
+//         statusSpan.classList.add("status-span");
+//         if(task.completed) {
+//             taskDiv.classList.add("completed");
+//             statusSpan.textContent = "Done ✔";
+//             statusSpan.style.color = "green";
+//             taskDiv.appendChild(statusSpan);
+
+//             taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
+//                 child.style.pointerEvents = "none";
+//             });
+
+//             taskStatusCheckBox.style.pointerEvents = "auto";
+//         } else {
+//             taskDiv.classList.remove("completed");
+//             statusSpan.textContent = "";
+//             taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
+//                 child.style.pointerEvents = "auto";
+//             })
+//         }
+
+//         taskStatusCheckBox.addEventListener("change", () => {
+//             task.toggleComplete();
+//             saveToLocalStorage();
+//             displayProjectTasks(project);
+//         });
+
+//         taskDiv.appendChild(taskStatusCheckBox);
+
+//         // Buttons container
+//         const buttonsContainer = document.createElement("div");
+//         buttonsContainer.classList.add("task-buttons-container");
+
+//         // Delete task button
+//         const deleteTaskBtn = document.createElement("button");
+//         deleteTaskBtn.classList.add("delete-task-btn");
+
+//         const trashIcon = document.createElement("img");
+//         trashIcon.classList.add("trash-icon");
+//         trashIcon.src = trashIconSvg;
+//         trashIcon.alt = "Delete task";
+//         trashIcon.width = 30;
+//         trashIcon.height = 30;
+
+//         deleteTaskBtn.appendChild(trashIcon);
+//         buttonsContainer.appendChild(deleteTaskBtn);
+
+//         deleteTaskBtn.addEventListener("click", (e) => {
+//             e.stopPropagation();
+//             showDeleteModal("task", () => {
+//                 deleteTask(project, task);
+//             });
+//         });
+        
+//         // Edit task button
+//         const editTaskBtn = document.createElement("button");
+//         editTaskBtn.classList.add("edit-task-btn");
+
+//         const editIcon = document.createElement("img");
+//         editIcon.classList.add("edit-icon");
+//         editIcon.src = editIconSvg;
+//         editIcon.alt = "Edit task";
+//         editIcon.width = 30;
+//         editIcon.height = 30;
+
+//         editTaskBtn.appendChild(editIcon);
+//         buttonsContainer.appendChild(editTaskBtn);
+
+//         editTaskBtn.addEventListener("click", (e) => {
+//             e.stopPropagation();
+//             openEditTaskModal(task, project);
+//         });
+
+//         taskDiv.appendChild(buttonsContainer);
+//         tasksContainerDiv.appendChild(taskDiv);
+//         mainPage.appendChild(tasksContainerDiv);
+//     });
+
+    
+
+//     // Add task button
+//     const headerAuthorDiv = document.querySelector(".header-author");
+
+//     const addTaskBtn = document.createElement("button");
+//     addTaskBtn.innerHTML = 
+//         `<svg class="add-buttons-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+//         <line x1="12" y1="5" x2="12" y2="19"></line>
+//         <line x1="5" y1="12" x2="19" y2="12"></line>
+//         </svg>`;
+//     addTaskBtn.classList.add("add-task-btn");
+
+//     addTaskBtn.addEventListener("click", () => openTaskModalForProject(project));
+
+//     headerAuthorDiv.appendChild(addTaskBtn);
+// };
+
+
 function displayProjectTasks(project) {
     if (!project) {
         console.error("Project not found or undefined!");
@@ -408,6 +556,7 @@ function displayProjectTasks(project) {
     headerAuthorDiv.appendChild(addTaskBtn);
 };
 
+
 function deleteTask(project, task) {
     const taskIndex = project.tasksContainer.indexOf(task);
 
@@ -495,6 +644,13 @@ function addProjectHandler(event) {
     saveToLocalStorage();
     newProjectDialog.close();
 }
+
+// Sort Tasks
+function getAllTasks(projects) {
+    return projects.flatMap(project => project.tasks);
+}
+
+
 
 //event listeners
 
