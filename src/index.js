@@ -530,6 +530,7 @@ function displayProjectTasks(project) {
 
         editTaskBtn.addEventListener("click", (e) => {
             e.stopPropagation();
+            positionModal(editTaskBtn, newTaskDialog);
             openEditTaskModal(task, project);
         });
 
@@ -551,7 +552,17 @@ function displayProjectTasks(project) {
         </svg>`;
     addTaskBtn.classList.add("add-task-btn");
 
-    addTaskBtn.addEventListener("click", () => openTaskModalForProject(project));
+    // addTaskBtn.addEventListener("click", () => openTaskModalForProject(project));
+
+    addTaskBtn.addEventListener("click", () => {
+        positionModal(addTaskBtn, newTaskDialog);
+
+        if (newTaskDialog.hasAttribute("open")) {
+            newTaskDialog.close(); 
+        } else {
+            newTaskDialog.showModal(); 
+        };
+    });
 
     headerAuthorDiv.appendChild(addTaskBtn);
 };
@@ -580,6 +591,7 @@ function openEditTaskModal(task, project) {
     taskPriorityInput.value = task.priority;
     taskDueDateInput.value = task.dueDate;
 
+    
     newTaskDialog.showModal();
 
     submitTaskBtn.textContent = "Save Changes";
@@ -596,7 +608,7 @@ function openEditTaskModal(task, project) {
         displayProjectTasks(project);
         newTaskDialog.close();
 
-        newTaskSubmitBtn.textContent = "Add Task";
+        newTaskSubmitBtn.textContent = "Add";
         newTaskSubmitBtn.addEventListener("click", addTaskHandler);
     });
 }
@@ -645,6 +657,32 @@ function addProjectHandler(event) {
     newProjectDialog.close();
 }
 
+function positionModal(button, modal) {
+    const buttonRect = button.getBoundingClientRect();
+    const modalWidth = modal.offsetWidth || 300;
+    const modalHeight = modal.offsetHeight || 200;
+
+    let left = buttonRect.right + window.scrollX;
+    let top = buttonRect.top + window.scrollY;
+
+    if (left + modalWidth > window.innerWidth) {
+        left = buttonRect.left + window.scrollX - modalWidth;
+    }
+
+    if (top + modalHeight > window.innerHeight) {
+        top = buttonRect.bottom + window.scrollY - modalHeight;
+    }
+
+    if (top + modalHeight > window.innerHeight) {
+        top = buttonRect.top + window.scrollY - modalHeight - 10;
+    } else if (top < 0) {
+        top = buttonRect.bottom + window.scrollY + 10;
+    }
+
+    modal.style.left = `${left}px`;
+    modal.style.top = `${top}px`;
+}
+
 // Sort Tasks
 function getAllTasks(projects) {
     return projects.flatMap(project => project.tasks);
@@ -659,7 +697,18 @@ submitProjectBtn.addEventListener("click", addProjectHandler);
 submitTaskBtn.addEventListener("click", addTaskHandler);
 
 // Show & close modals listeners
-addProjectBtn.addEventListener("click", () => newProjectDialog.showModal());
+// addProjectBtn.addEventListener("click", () => newProjectDialog.showModal());
+
+addProjectBtn.addEventListener("click", () => {
+    positionModal(addProjectBtn, newProjectDialog);
+
+    if (newProjectDialog.hasAttribute("open")) {
+        newProjectDialog.close(); 
+    } else {
+        newProjectDialog.showModal(); 
+    };
+});
+
 closeProjectsModalBtn.addEventListener("click", () => newProjectDialog.close());
 closeTasksModalBtn.addEventListener("click", () => newTaskDialog.close());
 

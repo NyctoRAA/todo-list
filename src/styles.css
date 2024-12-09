@@ -72,6 +72,11 @@ button:hover {
     width: fit-content;
 }
 
+.form-section {
+    display: flex;
+    flex-direction: column;
+}
+
 header {
     grid-area: header;
     display: flex;
@@ -140,6 +145,37 @@ header {
     padding: 20px;
 }
 
+.new-project-dialog {
+    position: absolute;
+    inset: auto;
+    background: rgb(30, 30, 30);
+    color: var(--custom-white);
+    border: 1px solid rgb(48, 47, 47);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.new-project-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.574);
+}
+
+.new-task-dialog {
+    position: absolute;
+    inset: auto;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.new-task-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.574);
+}
+
 .projects-header {
     display: flex;
     align-items: center;
@@ -184,6 +220,19 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.close-project-dialog-btn, .close-task-dialog-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: none;
+    border-radius: 5px;
+    padding: 12px;
+    background-color: white;
+    font-weight: bolder;
+    color: black;
+    margin: 0;
 }
 
 .project-container {
@@ -304,9 +353,15 @@ header {
     background-color: rgba(169, 169, 169, 0.304);
 }
 
-.delete-project-btn, .edit-project-btn {
+.delete-project-btn, .edit-project-btn, .edit-task-btn, .delete-task-btn {
     background: none;
     border: none;
+    border-radius: 10px;
+    transition: background-color 0.4s ease, transform 0.6s ease;
+}
+
+.edit-task-btn:hover, .delete-task-btn:hover {
+    background-color: rgba(255, 255, 255, 0.315) ;
 }
 
 .trash-icon, .edit-icon {
