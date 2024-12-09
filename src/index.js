@@ -585,12 +585,14 @@ function openEditTaskModal(task, project) {
     const taskDescriptionInput = document.querySelector("#taskDescription");
     const taskPriorityInput = document.querySelector("#taskPriority");
     const taskDueDateInput = document.querySelector("#dueDate");
+    const taskModalTitle = document.querySelector(".task-modal-title");
 
     taskTitleInput.value = task.title;
     taskDescriptionInput.value = task.description;
     taskPriorityInput.value = task.priority;
     taskDueDateInput.value = task.dueDate;
 
+    taskModalTitle.textContent = "Edit Task";
     
     newTaskDialog.showModal();
 
