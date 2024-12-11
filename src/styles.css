@@ -78,6 +78,18 @@ button:hover {
     gap: 2px;
 }
 
+input[type="text"] {
+    padding: 4px 6px;
+    /* width: 100%; */
+    border: 1px solid #cacaca;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+input[type="text"]:focus {
+    outline: 2px solid #ccc;
+}
+
 header {
     grid-area: header;
     display: flex;
@@ -167,6 +179,7 @@ header {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    font-size: 14px;
 }
 
 .submit-project-btn, .submit-task-btn {
@@ -183,32 +196,42 @@ header {
     opacity: 0.7;
 }
 
-.project-modal-title {
-    margin: 0;
+.submit-project-btn:focus, .submit-task-btn:focus {
+    outline: 2px solid #ccc;
 }
 
-#projectName {
-    padding: 4px 6px;
-    /* width: 100%; */
-    border: 1px solid #cacaca;
-    border-radius: 6px;
-    font-size: 13px;
+.project-modal-title {
+    font-family: "Inter-Bold", Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    margin: 0;
 }
 
 .new-task-dialog {
     position: absolute;
     inset: auto;
-    background: white;
-    border: 1px solid #ccc;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background: rgb(30, 30, 30);
+    color: var(--custom-white);
+    border: 1px solid rgb(48, 47, 47);
+    box-shadow: 0px 4px 8px rgba(146, 143, 143, 0.2);
     padding: 1rem;
     border-radius: 8px;
     z-index: 1000;
-    margin-top: 8px;
 }
 
 .new-task-dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.574);
+}
+
+.add-task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.task-modal-title {
+    font-family: "Inter-Bold", Arial, Helvetica, sans-serif;
+    font-size: 18px;
 }
 
 .projects-header {
@@ -276,6 +299,10 @@ header {
     font-size: 0.9rem;
 }
 
+.close-project-dialog-btn:focus, .close-task-dialog-btn:focus {
+    outline: 1px solid #ccc;
+}
+
 .project-container {
     display: flex;
     align-items: center;
@@ -336,13 +363,43 @@ header {
     min-width: 200px;
 }
 
-.task.completed {
-    opacity: 0.6;
+.task-completed-div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
 }
 
-.task.completed input[type="checkbox"] {
-    filter: none;    
-    opacity: 1;      
+.taskCheckBox {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    border: 2px solid #ccc;
+    background-color: white;
+    appearance: none;
+    display: inline-block;
+}
+
+.taskCheckBox:focus {
+    outline: 1px solid #ccc;
+}
+
+.taskCheckBox:checked {
+    background-color: var(--custom-white);
+    border-color: #4caf50;
+    color: white;
+}
+
+.taskCheckBox:checked::after {
+    content: '✔';
+    color: #4caf50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.task.completed > *:not(.task-completed-div) {
+    opacity: 0.6;
 }
 
 .task.completed .status-span {
@@ -352,27 +409,79 @@ header {
     font-weight: bold;
 }
 
-.task.completed p, .task.completed .task-buttons-container {
+.task.completed p, .task.completed {
     pointer-events: none;
+}
+
+.task-buttons-container {
+    pointer-events: auto;
+    filter: none;
+    opacity: 1 !important;
 }
 
 .task.disabled {
     pointer-events: none;
 }
 
+.task-completed-div {
+    filter: none;    
+    opacity: 1 !important;      
+}
+
 .taskTitle {
-    font-size: 1.5em;
-    font-weight: bold;
+    font-size: 18px;
+    font-family: "Inter-Bold", Arial, Helvetica, sans-serif;
 }
 
 .taskDescription {
+    font-size: 14px;
+}
 
+#taskDescription {
+    border: 1px solid #cacaca;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+#taskDescription:focus {
+    outline: 2px solid #ccc;
+}
+
+.task-statuses {
+    display: flex;
+    gap: 8px;
 }
 
 .taskPriority {
     width: fit-content;
-    padding: 3px 10px 3px 10px;
-    border-radius: 5px;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 13px;
+}
+
+#taskPriority {
+    border-radius: 6px;
+    padding: 4px;
+}
+
+#taskPriority:focus {
+    outline: 2px solid #ccc;
+}
+
+.taskDueDate {
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+#dueDate {
+    border-radius: 6px;
+    padding: 2px;
+}
+
+#dueDate:focus {
+    outline: 2px solid #ccc;
 }
 
 .add-project-btn, .add-task-btn {
@@ -384,13 +493,27 @@ header {
     padding: 0;
 }
 
-.add-buttons-svg {
+.add-task-btn {
+    background-color: #cacaca;
+    border-radius: 50%;
+    color: black;
+    transition: opacity 0.4s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-task-btn:hover {
+    opacity: 0.6;
+}
+
+.add-task-svg, .add-project-svg {
     max-height: 25px;
     border-radius: 6px;
     transition: background-color 0.6s ease, transform 0.6s ease;
 }
 
-.add-buttons-svg:hover {
+.add-project-svg:hover {
     background-color: rgba(169, 169, 169, 0.304);
 }
 

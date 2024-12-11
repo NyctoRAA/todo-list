@@ -424,19 +424,29 @@ function displayProjectTasks(project) {
     projectTitle.textContent = `${project.name}'s Tasks`;
     mainPage.appendChild(projectTitle);
 
+    const existingAddTaskBtn = document.querySelector(".add-task-btn");
+    if (existingAddTaskBtn) {
+        existingAddTaskBtn.remove();
+    };
+
     project.tasksContainer.forEach((task) => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("task");
+
+        const taskStatuses = document.createElement("div");
+        taskStatuses.classList.add("task-statuses");
         
         const taskTitle = document.createElement("p");
         taskTitle.classList.add("taskTitle");
         taskTitle.textContent = task.title;
-        taskDiv.appendChild(taskTitle);
 
         const taskDescription = document.createElement("p");
         taskDescription.classList.add("taskDescription");
         taskDescription.textContent = task.description;
-        taskDiv.appendChild(taskDescription);
+
+        const taskProject = document.createElement("p");
+        taskProject.classList.add("taskProject");
+        taskProject.textContent = task.projectName;
 
         const taskPriority = document.createElement("p");
         taskPriority.classList.add("taskPriority");
@@ -447,18 +457,20 @@ function displayProjectTasks(project) {
         taskPriority.style.backgroundColor = "#FFD85F";   
         taskPriority.style.color = "Black";
         taskPriority.textContent = task.priority;
-        taskDiv.appendChild(taskPriority);
-
 
         const taskDueDate = document.createElement("p");
         taskDueDate.classList.add("taskDueDate");
         taskDueDate.textContent = `${formatDueDate(task.dueDate)}`;
-        taskDiv.appendChild(taskDueDate);
+        taskDueDate.style.backgroundColor = "#E0BFFC";
+        taskDueDate.style.color = "Black";
 
         const taskStatusCheckBox = document.createElement("input");
         taskStatusCheckBox.classList.add("taskCheckBox");
         taskStatusCheckBox.type = "checkbox";
         taskStatusCheckBox.checked = task.completed;
+
+        const taskCompletedDiv = document.createElement("div");
+        taskCompletedDiv.classList.add("task-completed-div");
 
         const statusSpan = document.createElement("span");
         statusSpan.classList.add("status-span");
@@ -466,11 +478,11 @@ function displayProjectTasks(project) {
             taskDiv.classList.add("completed");
             statusSpan.textContent = "Done ✔";
             statusSpan.style.color = "green";
-            taskDiv.appendChild(statusSpan);
+            taskCompletedDiv.appendChild(statusSpan);
 
-            taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
-                child.style.pointerEvents = "none";
-            });
+            // taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
+            //     child.style.pointerEvents = "none";
+            // });
 
             taskStatusCheckBox.style.pointerEvents = "auto";
         } else {
@@ -486,8 +498,15 @@ function displayProjectTasks(project) {
             saveToLocalStorage();
             displayProjectTasks(project);
         });
-
-        taskDiv.appendChild(taskStatusCheckBox);
+        
+        taskDiv.appendChild(taskTitle);
+        taskStatuses.appendChild(taskProject);
+        taskStatuses.appendChild(taskPriority);
+        taskStatuses.appendChild(taskDueDate);
+        taskDiv.appendChild(taskStatuses);
+        taskDiv.appendChild(taskDescription);
+        taskCompletedDiv.appendChild(taskStatusCheckBox);
+        taskDiv.appendChild(taskCompletedDiv);
 
         // Buttons container
         const buttonsContainer = document.createElement("div");
@@ -546,7 +565,7 @@ function displayProjectTasks(project) {
 
     const addTaskBtn = document.createElement("button");
     addTaskBtn.innerHTML = 
-        `<svg class="add-buttons-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        `<svg class="add-buttons-svg add-task-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="12" y1="5" x2="12" y2="19"></line>
         <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>`;
@@ -564,7 +583,7 @@ function displayProjectTasks(project) {
         };
     });
 
-    headerAuthorDiv.appendChild(addTaskBtn);
+    headerAuthorDiv.prepend(addTaskBtn);
 };
 
 
@@ -630,10 +649,8 @@ function addTaskHandler(event) {
     const taskDueDate = document.querySelector("#dueDate").value;
 
     if(currentProject) {
-        const task = createTask(taskTitle, taskDescription, taskPriority, taskDueDate);
+        const task = createTask(taskTitle, taskDescription, currentProject.name, taskPriority, taskDueDate);
         currentProject.addTask(task);
-        console.log("Task created:", task);
-        console.log("Tasks in current project:", currentProject.tasksContainer);
         saveToLocalStorage();
     };
 

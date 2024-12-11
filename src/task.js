@@ -1,8 +1,9 @@
 class Task {
-    constructor(title, description, priority, dueDate) {
+    constructor(title, description, projectName, priority, dueDate) {
         this.title = title;
         this.description = description;
         this.priority = priority;
+        this.projectName = projectName;
         this.dueDate = dueDate;
         this.completed = false;
     }
@@ -13,5 +14,5 @@ class Task {
 }
 
 export function createTask(title, description, priority, dueDate) {
-    return new Task(title, description, priority, dueDate);
+    return new Task(title, description, projectName, priority, dueDate);
 }
