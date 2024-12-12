@@ -13,7 +13,7 @@ const closeProjectsModalBtn = document.querySelector(".close-project-dialog-btn"
 const closeTasksModalBtn = document.querySelector(".close-task-dialog-btn");
 
 const tasksContainerDiv = document.querySelector(".tasks-container");
-const projectsContainer = document.querySelector(".sidebar-content");
+const projectsContainer = document.querySelector(".projects-container");
 const newProjectDialog = document.querySelector(".new-project-dialog");
 const newTaskDialog = document.querySelector(".new-task-dialog");
 const mainPage = document.querySelector(".content");
@@ -27,6 +27,7 @@ function saveToLocalStorage() {
         tasksContainer: project.tasksContainer.map((task) => ({
             title: task.title,
             description: task.description,
+            projectName: task.projectName,
             priority: task.priority,
             dueDate: task.dueDate,
             completed: task.completed,
@@ -63,7 +64,7 @@ function loadFromLocalStorage() {
                 project.tasksContainer = projectData.tasksContainer
                     .filter((task) => task.dueDate && !isNaN(new Date(task.dueDate)))
                     .map((task) => {
-                        const restoredTask = createTask(task.title, task.description, task.priority, task.dueDate);
+                        const restoredTask = createTask(task.title, task.description, task.projectName, task.priority, task.dueDate);
                         restoredTask.completed = !!task.completed;
                         return restoredTask;
                     });
@@ -169,6 +170,7 @@ function createProjectUI(project) {
 
     editProjectBtn.addEventListener("click", (e) => {
         e.stopPropagation();
+        positionModal(editProjectBtn, newProjectDialog);
         openEditProjectModal(project);
     })
 
@@ -188,6 +190,9 @@ function openEditProjectModal(project) {
     projectTitleInput.value = project.name;
 
     newProjectDialog.showModal();
+
+    projectTitleInput.focus();
+    projectTitleInput.select();
 
     submitProjectBtn.textContent = "Save Changes";
 
@@ -225,10 +230,10 @@ function deleteProject(project, projectDiv) {
     saveToLocalStorage();
 }
 
-function openTaskModalForProject(project) {
-    currentProject = project;
-    newTaskDialog.showModal();
-}
+// function openTaskModalForProject(project) {
+//     currentProject = project;
+//     newTaskDialog.showModal();
+// }
 
 function addProjectToSidebar(project) {
     projectsLibrary.push(project);
@@ -453,8 +458,9 @@ function displayProjectTasks(project) {
         if(task.priority == "High") {
             taskPriority.style.backgroundColor = "Salmon";
             taskPriority.style.color = "Black";
+        } else {
+            taskPriority.style.backgroundColor = "#FFD85F";   
         }
-        taskPriority.style.backgroundColor = "#FFD85F";   
         taskPriority.style.color = "Black";
         taskPriority.textContent = task.priority;
 
@@ -505,12 +511,14 @@ function displayProjectTasks(project) {
         taskStatuses.appendChild(taskDueDate);
         taskDiv.appendChild(taskStatuses);
         taskDiv.appendChild(taskDescription);
-        taskCompletedDiv.appendChild(taskStatusCheckBox);
-        taskDiv.appendChild(taskCompletedDiv);
+        taskCompletedDiv.prepend(taskStatusCheckBox);
 
         // Buttons container
         const buttonsContainer = document.createElement("div");
         buttonsContainer.classList.add("task-buttons-container");
+
+        const editDeleteBtnsContainer = document.createElement("div");
+        editDeleteBtnsContainer.classList.add("edit-delete-btns-container");
 
         // Delete task button
         const deleteTaskBtn = document.createElement("button");
@@ -524,7 +532,7 @@ function displayProjectTasks(project) {
         trashIcon.height = 30;
 
         deleteTaskBtn.appendChild(trashIcon);
-        buttonsContainer.appendChild(deleteTaskBtn);
+        editDeleteBtnsContainer.appendChild(deleteTaskBtn);
 
         deleteTaskBtn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -545,7 +553,7 @@ function displayProjectTasks(project) {
         editIcon.height = 30;
 
         editTaskBtn.appendChild(editIcon);
-        buttonsContainer.appendChild(editTaskBtn);
+        editDeleteBtnsContainer.appendChild(editTaskBtn);
 
         editTaskBtn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -553,6 +561,8 @@ function displayProjectTasks(project) {
             openEditTaskModal(task, project);
         });
 
+        buttonsContainer.prepend(taskCompletedDiv);
+        buttonsContainer.appendChild(editDeleteBtnsContainer);
         taskDiv.appendChild(buttonsContainer);
         tasksContainerDiv.appendChild(taskDiv);
         mainPage.appendChild(tasksContainerDiv);
@@ -615,6 +625,9 @@ function openEditTaskModal(task, project) {
     
     newTaskDialog.showModal();
 
+    taskTitleInput.focus();
+    taskTitleInput.select();
+
     submitTaskBtn.textContent = "Save Changes";
 
     submitTaskBtn.replaceWith(submitTaskBtn.cloneNode(true));
@@ -625,6 +638,8 @@ function openEditTaskModal(task, project) {
         task.description = taskDescriptionInput.value;
         task.priority = taskPriorityInput.value;
         task.dueDate = taskDueDateInput.value;
+
+        saveToLocalStorage();
 
         displayProjectTasks(project);
         newTaskDialog.close();
@@ -649,6 +664,9 @@ function addTaskHandler(event) {
     const taskDueDate = document.querySelector("#dueDate").value;
 
     if(currentProject) {
+        console.log("Current project:", currentProject);
+        console.log("Current project name:", currentProject.name);
+
         const task = createTask(taskTitle, taskDescription, currentProject.name, taskPriority, taskDueDate);
         currentProject.addTask(task);
         saveToLocalStorage();

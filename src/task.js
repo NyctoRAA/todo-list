@@ -13,6 +13,6 @@ class Task {
     }
 }
 
-export function createTask(title, description, priority, dueDate) {
+export function createTask(title, description, projectName, priority, dueDate) {
     return new Task(title, description, projectName, priority, dueDate);
 }
