@@ -189,6 +189,9 @@ function openEditProjectModal(project) {
 
     projectTitleInput.value = project.name;
 
+    const projectModalTitle = document.querySelector(".project-modal-title");
+    projectModalTitle.textContent = "Edit Project";
+
     newProjectDialog.showModal();
 
     projectTitleInput.focus();
@@ -196,22 +199,24 @@ function openEditProjectModal(project) {
 
     submitProjectBtn.textContent = "Save Changes";
 
-    submitProjectBtn.replaceWith(submitProjectBtn.cloneNode(true));
+    const existingSubmitBtn = document.querySelector(".submit-project-btn");
+    existingSubmitBtn.replaceWith(existingSubmitBtn.cloneNode(true)); 
     const newProjectSubmitBtn = document.querySelector(".submit-project-btn");
 
     newProjectSubmitBtn.addEventListener("click", () => {
-        project.name = projectTitleInput.value;
+        const updatedName = projectTitleInput.value.trim();
+        if (updatedName) {
+            project.name = updatedName;
 
-        projectsContainer.innerHTML = "";
-        projectsLibrary.forEach((proj) => createProjectUI(proj));
+            projectsContainer.innerHTML = "";
+            projectsLibrary.forEach((proj) => createProjectUI(proj));
 
-        saveToLocalStorage();
+            saveToLocalStorage();
+        }
+
         newProjectDialog.close();
-
-        newProjectSubmitBtn.textContent = "Add Project";
-        newProjectSubmitBtn.addEventListener("click", addProjectHandler);
     });
-}
+};
 
 function deleteProject(project, projectDiv) {
     const projectIndex = projectsLibrary.indexOf(project);
@@ -228,12 +233,22 @@ function deleteProject(project, projectDiv) {
     }
 
     saveToLocalStorage();
-}
+};
 
-// function openTaskModalForProject(project) {
-//     currentProject = project;
-//     newTaskDialog.showModal();
-// }
+function openCreateProjectModal() {
+    const projectTitle = document.querySelector("#projectName");
+    projectTitle.value = "";
+
+    const projectModalTitle = document.querySelector(".project-modal-title");
+    projectModalTitle.textContent = "New Project";
+
+    if (newProjectDialog.hasAttribute("open")) {
+        newProjectDialog.close(); 
+    } else {
+        newProjectDialog.showModal(); 
+        projectTitle.focus();
+    };
+};
 
 function addProjectToSidebar(project) {
     projectsLibrary.push(project);
@@ -581,21 +596,36 @@ function displayProjectTasks(project) {
         </svg>`;
     addTaskBtn.classList.add("add-task-btn");
 
-    // addTaskBtn.addEventListener("click", () => openTaskModalForProject(project));
-
     addTaskBtn.addEventListener("click", () => {
         positionModal(addTaskBtn, newTaskDialog);
 
-        if (newTaskDialog.hasAttribute("open")) {
-            newTaskDialog.close(); 
-        } else {
-            newTaskDialog.showModal(); 
-        };
+        openCreateTaskModal();
     });
 
     headerAuthorDiv.prepend(addTaskBtn);
 };
 
+function openCreateTaskModal() {
+    const taskTitleInput = document.querySelector("#taskTitle");
+    const taskDescriptionInput = document.querySelector("#taskDescription");
+    const taskPriorityInput = document.querySelector("#taskPriority");
+    const taskDueDateInput = document.querySelector("#dueDate");
+
+    taskTitleInput.value = "";
+    taskDescriptionInput.value = "";
+    taskPriorityInput.value = "Low";
+    taskDueDateInput.value = "";
+
+    const taskModalTitle = document.querySelector(".task-modal-title");
+    taskModalTitle.textContent = "New Task";
+
+    if(newTaskDialog.hasAttribute("open")) {
+        newTaskDialog.close();
+    } else {
+        newTaskDialog.showModal();
+        taskTitleInput.focus();
+    }
+};
 
 function deleteTask(project, task) {
     const taskIndex = project.tasksContainer.indexOf(task);
@@ -734,16 +764,11 @@ submitProjectBtn.addEventListener("click", addProjectHandler);
 submitTaskBtn.addEventListener("click", addTaskHandler);
 
 // Show & close modals listeners
-// addProjectBtn.addEventListener("click", () => newProjectDialog.showModal());
 
 addProjectBtn.addEventListener("click", () => {
     positionModal(addProjectBtn, newProjectDialog);
 
-    if (newProjectDialog.hasAttribute("open")) {
-        newProjectDialog.close(); 
-    } else {
-        newProjectDialog.showModal(); 
-    };
+    openCreateProjectModal();
 });
 
 closeProjectsModalBtn.addEventListener("click", () => newProjectDialog.close());

@@ -301,7 +301,8 @@ header {
 }
 
 .close-project-dialog-btn:focus, .close-task-dialog-btn:focus {
-    outline: 1px solid #ccc;
+    outline: none;
+    background-color: #cccccc44;
 }
 
 .project-container {
@@ -573,6 +574,8 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 20px;
+    height: 20px;
 }
 
 .trash-icon:hover, .edit-icon:hover {
