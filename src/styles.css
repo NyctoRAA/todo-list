@@ -58,6 +58,7 @@ main {
     "header header"
     "sidebar content";
     height: 100vh;
+    overflow: hidden;
 }
 
 .hidden {
@@ -191,6 +192,7 @@ header {
     width: fit-content;
     font-size: 1rem;
     transition: opacity 0.4s ease;
+    font-size: 14px;
 }
 
 .submit-project-btn:hover, .submit-task-btn:hover {
@@ -267,6 +269,7 @@ header {
     grid-area: content;
     background-color: rgb(48, 47, 47);
     padding: 20px;
+    overflow-y: auto;
 }
 
 .content h2 {
@@ -313,6 +316,7 @@ header {
     border-radius: 15px;
     padding: 0px 10px;
     transition: background-color 0.6s ease, transform 0.6s ease;
+    overflow-y: auto;
 }
 
 .project-container:hover {

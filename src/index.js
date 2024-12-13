@@ -21,21 +21,61 @@ const mainPage = document.querySelector(".content");
 const projectsLibrary = [];
 let currentProject = null;
 
-function saveToLocalStorage() {
-    const dataToSave = projectsLibrary.map((project) => ({
-        name: project.name,
-        tasksContainer: project.tasksContainer.map((task) => ({
-            title: task.title,
-            description: task.description,
-            projectName: task.projectName,
-            priority: task.priority,
-            dueDate: task.dueDate,
-            completed: task.completed,
-        })),
-    }));
+// function saveToLocalStorage() {
+//     const dataToSave = projectsLibrary.map((project) => ({
+//         name: project.name,
+//         tasksContainer: project.tasksContainer.map((task) => ({
+//             title: task.title,
+//             description: task.description,
+//             projectName: task.projectName,
+//             priority: task.priority,
+//             dueDate: task.dueDate,
+//             completed: task.completed,
+//         })),
+//     }));
 
-    localStorage.setItem('projectsLibrary', JSON.stringify(dataToSave));    
-}
+//     localStorage.setItem('projectsLibrary', JSON.stringify(dataToSave));    
+// }
+
+// function loadFromLocalStorage() {
+//     try {
+//         const savedData = localStorage.getItem("projectsLibrary");
+//         if (savedData) {
+//             const parsedData = JSON.parse(savedData);
+
+//             // Verifies if its an array before moving on
+//             if (!Array.isArray(parsedData)) {
+//                 console.warn("Data in localStorage is not in expected format. Resetting...");
+//                 return;
+//             }
+
+//             projectsLibrary.length = 0; // Cleans the array without losing it's reference
+
+//             parsedData.forEach((projectData) => {
+//                 // Verifies the basic estructure of each project
+//                 if (!projectData.name || !Array.isArray(projectData.tasksContainer)) {
+//                     console.warn("Project data is invalid. Skipping...");
+//                     return;
+//                 }
+
+//                 const project = createProject(projectData.name);
+
+//                 // Filtrates valid tasks
+//                 project.tasksContainer = projectData.tasksContainer
+//                     .filter((task) => task.dueDate && !isNaN(new Date(task.dueDate)))
+//                     .map((task) => {
+//                         const restoredTask = createTask(task.title, task.description, task.projectName, task.priority, task.dueDate);
+//                         restoredTask.completed = !!task.completed;
+//                         return restoredTask;
+//                     });
+
+//                 projectsLibrary.push(project);
+//             });
+//         }
+//     } catch (error) {
+//         console.error("Error loading data from localStorage:", error);
+//     }
+// }
 
 function loadFromLocalStorage() {
     try {
@@ -43,16 +83,14 @@ function loadFromLocalStorage() {
         if (savedData) {
             const parsedData = JSON.parse(savedData);
 
-            // Verifies if its an array before moving on
             if (!Array.isArray(parsedData)) {
-                console.warn("Data in localStorage is not in expected format. Resetting...");
+                console.warn("Data in localStorage is not in the expected format. Resetting...");
                 return;
             }
 
-            projectsLibrary.length = 0; // Cleans the array without losing it's reference
+            projectsLibrary.length = 0;
 
             parsedData.forEach((projectData) => {
-                // Verifies the basic estructure of each project
                 if (!projectData.name || !Array.isArray(projectData.tasksContainer)) {
                     console.warn("Project data is invalid. Skipping...");
                     return;
@@ -60,11 +98,16 @@ function loadFromLocalStorage() {
 
                 const project = createProject(projectData.name);
 
-                // Filtrates valid tasks
                 project.tasksContainer = projectData.tasksContainer
-                    .filter((task) => task.dueDate && !isNaN(new Date(task.dueDate)))
+                    .filter((task) => task.title && task.priority)
                     .map((task) => {
-                        const restoredTask = createTask(task.title, task.description, task.projectName, task.priority, task.dueDate);
+                        const restoredTask = createTask(
+                            task.title, 
+                            task.description || "", 
+                            task.projectName || project.name,
+                            task.priority, 
+                            task.dueDate || ""
+                        );
                         restoredTask.completed = !!task.completed;
                         return restoredTask;
                     });
@@ -77,6 +120,21 @@ function loadFromLocalStorage() {
     }
 }
 
+function saveToLocalStorage() {
+    const dataToSave = projectsLibrary.map((project) => ({
+        name: project.name,
+        tasksContainer: project.tasksContainer.map((task) => ({
+            title: task.title,
+            description: task.description || "",
+            projectName: task.projectName || project.name,
+            priority: task.priority,
+            dueDate: task.dueDate || "", 
+            completed: !!task.completed,
+        })),
+    }));
+
+    localStorage.setItem('projectsLibrary', JSON.stringify(dataToSave));
+};
 
 // Load the data form the localStorage when starting
 loadFromLocalStorage();
@@ -208,6 +266,10 @@ function openEditProjectModal(project) {
         if (updatedName) {
             project.name = updatedName;
 
+            project.tasksContainer.forEach((task) => {
+                task.projectName.value = updatedName;
+            });
+
             projectsContainer.innerHTML = "";
             projectsLibrary.forEach((proj) => createProjectUI(proj));
 
@@ -258,10 +320,11 @@ function addProjectToSidebar(project) {
 
 function formatDueDate(date) {
     if(!date || isNaN(new Date(date))) {
-        return "No due date.";
+        return "No due date";
     }
 
     const taskDate = new Date(date);
+    const daysDifference = differenceInDays(taskDate, new Date());
     
     if(isToday(taskDate)) {
         return "Today";
@@ -271,163 +334,32 @@ function formatDueDate(date) {
         return "Yesterday";
     };
 
-    const daysDifference = differenceInDays(taskDate, new Date());
+    const weeksDifference = Math.floor(daysDifference / 7);
+    const monthsDifference = Math.floor(daysDifference / 30);
+    const yearsDifference = Math.floor(daysDifference / 365);
+
     if(daysDifference > 0) {
-        return `In ${daysDifference} days.`;
+        if (yearsDifference >= 2) {
+            return `In ${yearsDifference} years`;
+        } else if (yearsDifference === 1) {
+            return "In 1 year";
+        } else if (monthsDifference >= 2) {
+            return `In ${monthsDifference} months`;
+        } else if (monthsDifference === 1) {
+            return "In 1 month";
+        } else if (weeksDifference >= 2) {
+            return `In ${weeksDifference} weeks`;
+        } else if (weeksDifference === 1) {
+            return "In 1 week";
+        } else {
+            return `In ${daysDifference} days`;
+        }
     } else if (daysDifference < 0) {
-        `${Math.abs(daysDifference)} days ago.`;
-    }
+        return "Expired";
+    };
 
     return format(taskDate, 'EEE MMM dd yyyy');
 }
-
-// function displayProjectTasks(project) {
-//     if (!project) {
-//         console.error("Project not found or undefined!");
-//         return;
-//     }
-
-//     currentProject = project;
-
-//     mainPage.innerHTML = "";
-//     tasksContainerDiv.innerHTML = "";
-
-//     const projectTitle = document.createElement("h2");
-//     projectTitle.textContent = `${project.name}'s Tasks`;
-//     mainPage.appendChild(projectTitle);
-
-//     project.tasksContainer.forEach((task) => {
-//         const taskDiv = document.createElement("div");
-//         taskDiv.classList.add("task");
-        
-//         const taskTitle = document.createElement("p");
-//         taskTitle.classList.add("taskTitle");
-//         taskTitle.textContent = task.title;
-//         taskDiv.appendChild(taskTitle);
-
-//         const taskDescription = document.createElement("p");
-//         taskDescription.classList.add("taskDescription");
-//         taskDescription.textContent = task.description;
-//         taskDiv.appendChild(taskDescription);
-
-//         const taskPriority = document.createElement("p");
-//         taskPriority.classList.add("taskPriority");
-//         if(task.priority == "High") {
-//             taskPriority.style.backgroundColor = "Salmon";
-//             taskPriority.style.color = "Black";
-//         }
-//         taskPriority.style.backgroundColor = "#FFD85F";   
-//         taskPriority.style.color = "Black";
-//         taskPriority.textContent = task.priority;
-//         taskDiv.appendChild(taskPriority);
-
-
-//         const taskDueDate = document.createElement("p");
-//         taskDueDate.classList.add("taskDueDate");
-//         taskDueDate.textContent = `${formatDueDate(task.dueDate)}`;
-//         taskDiv.appendChild(taskDueDate);
-
-//         const taskStatusCheckBox = document.createElement("input");
-//         taskStatusCheckBox.classList.add("taskCheckBox");
-//         taskStatusCheckBox.type = "checkbox";
-//         taskStatusCheckBox.checked = task.completed;
-
-//         const statusSpan = document.createElement("span");
-//         statusSpan.classList.add("status-span");
-//         if(task.completed) {
-//             taskDiv.classList.add("completed");
-//             statusSpan.textContent = "Done ✔";
-//             statusSpan.style.color = "green";
-//             taskDiv.appendChild(statusSpan);
-
-//             taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
-//                 child.style.pointerEvents = "none";
-//             });
-
-//             taskStatusCheckBox.style.pointerEvents = "auto";
-//         } else {
-//             taskDiv.classList.remove("completed");
-//             statusSpan.textContent = "";
-//             taskDiv.querySelectorAll("p, .task-buttons-container").forEach((child) => {
-//                 child.style.pointerEvents = "auto";
-//             })
-//         }
-
-//         taskStatusCheckBox.addEventListener("change", () => {
-//             task.toggleComplete();
-//             saveToLocalStorage();
-//             displayProjectTasks(project);
-//         });
-
-//         taskDiv.appendChild(taskStatusCheckBox);
-
-//         // Buttons container
-//         const buttonsContainer = document.createElement("div");
-//         buttonsContainer.classList.add("task-buttons-container");
-
-//         // Delete task button
-//         const deleteTaskBtn = document.createElement("button");
-//         deleteTaskBtn.classList.add("delete-task-btn");
-
-//         const trashIcon = document.createElement("img");
-//         trashIcon.classList.add("trash-icon");
-//         trashIcon.src = trashIconSvg;
-//         trashIcon.alt = "Delete task";
-//         trashIcon.width = 30;
-//         trashIcon.height = 30;
-
-//         deleteTaskBtn.appendChild(trashIcon);
-//         buttonsContainer.appendChild(deleteTaskBtn);
-
-//         deleteTaskBtn.addEventListener("click", (e) => {
-//             e.stopPropagation();
-//             showDeleteModal("task", () => {
-//                 deleteTask(project, task);
-//             });
-//         });
-        
-//         // Edit task button
-//         const editTaskBtn = document.createElement("button");
-//         editTaskBtn.classList.add("edit-task-btn");
-
-//         const editIcon = document.createElement("img");
-//         editIcon.classList.add("edit-icon");
-//         editIcon.src = editIconSvg;
-//         editIcon.alt = "Edit task";
-//         editIcon.width = 30;
-//         editIcon.height = 30;
-
-//         editTaskBtn.appendChild(editIcon);
-//         buttonsContainer.appendChild(editTaskBtn);
-
-//         editTaskBtn.addEventListener("click", (e) => {
-//             e.stopPropagation();
-//             openEditTaskModal(task, project);
-//         });
-
-//         taskDiv.appendChild(buttonsContainer);
-//         tasksContainerDiv.appendChild(taskDiv);
-//         mainPage.appendChild(tasksContainerDiv);
-//     });
-
-    
-
-//     // Add task button
-//     const headerAuthorDiv = document.querySelector(".header-author");
-
-//     const addTaskBtn = document.createElement("button");
-//     addTaskBtn.innerHTML = 
-//         `<svg class="add-buttons-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-//         <line x1="12" y1="5" x2="12" y2="19"></line>
-//         <line x1="5" y1="12" x2="19" y2="12"></line>
-//         </svg>`;
-//     addTaskBtn.classList.add("add-task-btn");
-
-//     addTaskBtn.addEventListener("click", () => openTaskModalForProject(project));
-
-//     headerAuthorDiv.appendChild(addTaskBtn);
-// };
-
 
 function displayProjectTasks(project) {
     if (!project) {
@@ -473,9 +405,11 @@ function displayProjectTasks(project) {
         if(task.priority == "High") {
             taskPriority.style.backgroundColor = "Salmon";
             taskPriority.style.color = "Black";
+        } else if(task.priority == "Medium") {
+            taskPriority.style.backgroundColor = "Orange";
         } else {
             taskPriority.style.backgroundColor = "#FFD85F";   
-        }
+        };
         taskPriority.style.color = "Black";
         taskPriority.textContent = task.priority;
 
@@ -658,6 +592,11 @@ function openEditTaskModal(task, project) {
     taskTitleInput.focus();
     taskTitleInput.select();
 
+    newTaskDialog.scrollIntoView({
+        behavior: "smooth",
+        block: "center" 
+    });
+
     submitTaskBtn.textContent = "Save Changes";
 
     submitTaskBtn.replaceWith(submitTaskBtn.cloneNode(true));
@@ -672,10 +611,10 @@ function openEditTaskModal(task, project) {
         saveToLocalStorage();
 
         displayProjectTasks(project);
-        newTaskDialog.close();
-
+        
         newTaskSubmitBtn.textContent = "Add";
-        newTaskSubmitBtn.addEventListener("click", addTaskHandler);
+
+        newTaskDialog.close();
     });
 }
 
@@ -751,13 +690,70 @@ function positionModal(button, modal) {
 }
 
 // Sort Tasks
-function getAllTasks(projects) {
-    return projects.flatMap(project => project.tasks);
-}
+function sortTasksByDueDate(project) {
+    if (!project) {
+        console.error("No project selected!");
+        return;
+    }
+
+    project.tasksContainer.sort((a, b) => {
+        const getTaskDate = (task) => {
+            if (task.dueDate === "Expired") {
+                return { date: new Date(0), priority: 3 };  // "Expired" vai para o final
+            }
+            if (task.dueDate === "No Due Date") {
+                return { date: new Date(0), priority: 2 };  // "No Due Date" vai para o final
+            }
+            return { date: new Date(task.dueDate), priority: 1 };  // Tarefas com data válida
+        };
+
+        const aDate = getTaskDate(a);
+        const bDate = getTaskDate(b);
+
+        if (aDate.priority !== bDate.priority) {
+            return aDate.priority - bDate.priority;
+        }
+
+        return aDate.date - bDate.date;
+    });
+
+    saveToLocalStorage();
+};
+
+function sortTasksByPriority(project) {
+    if (!project) {
+        console.error("No project selected!");
+        return;
+    }
+
+    const priorityOrder = { high: 1, medium: 2, low: 3 };
+
+    project.tasksContainer.sort((a, b) => {
+        const priorityA = priorityOrder[a.priority?.toLowerCase()] || 4;
+        const priorityB = priorityOrder[b.priority?.toLowerCase()] || 4;
+
+        return priorityA - priorityB;
+    });
+
+    saveToLocalStorage();
+};
+
+document.querySelector(".sort-by-dueDate").addEventListener("click", () => {
+    if(!currentProject) return;
+
+    sortTasksByDueDate(currentProject);
+    displayProjectTasks(currentProject);
+});
+
+document.querySelector(".sort-by-priority").addEventListener("click", () => {
+    if(!currentProject) return;
+
+    sortTasksByPriority(currentProject);
+    displayProjectTasks(currentProject);
+});
 
 
-
-//event listeners
+//Submit event listeners
 
 submitProjectBtn.addEventListener("click", addProjectHandler);
 
