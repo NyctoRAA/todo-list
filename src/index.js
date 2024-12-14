@@ -4,7 +4,7 @@ import { createTask } from "./task";
 // import { saveToLocalStorage, loadFromLocalStorage } from "./storage";
 import trashIconSvg from "./images/trash-icon.svg";
 import editIconSvg from "./images/edit-icon.svg";
-import { format, isTomorrow, isYesterday, isToday, differenceInDays } from 'date-fns';
+import { format, isTomorrow, isToday, differenceInDays } from 'date-fns';
 
 const addProjectBtn = document.querySelector(".add-project-btn");
 const submitProjectBtn = document.querySelector(".submit-project-btn");
@@ -20,62 +20,6 @@ const mainPage = document.querySelector(".content");
 
 const projectsLibrary = [];
 let currentProject = null;
-
-// function saveToLocalStorage() {
-//     const dataToSave = projectsLibrary.map((project) => ({
-//         name: project.name,
-//         tasksContainer: project.tasksContainer.map((task) => ({
-//             title: task.title,
-//             description: task.description,
-//             projectName: task.projectName,
-//             priority: task.priority,
-//             dueDate: task.dueDate,
-//             completed: task.completed,
-//         })),
-//     }));
-
-//     localStorage.setItem('projectsLibrary', JSON.stringify(dataToSave));    
-// }
-
-// function loadFromLocalStorage() {
-//     try {
-//         const savedData = localStorage.getItem("projectsLibrary");
-//         if (savedData) {
-//             const parsedData = JSON.parse(savedData);
-
-//             // Verifies if its an array before moving on
-//             if (!Array.isArray(parsedData)) {
-//                 console.warn("Data in localStorage is not in expected format. Resetting...");
-//                 return;
-//             }
-
-//             projectsLibrary.length = 0; // Cleans the array without losing it's reference
-
-//             parsedData.forEach((projectData) => {
-//                 // Verifies the basic estructure of each project
-//                 if (!projectData.name || !Array.isArray(projectData.tasksContainer)) {
-//                     console.warn("Project data is invalid. Skipping...");
-//                     return;
-//                 }
-
-//                 const project = createProject(projectData.name);
-
-//                 // Filtrates valid tasks
-//                 project.tasksContainer = projectData.tasksContainer
-//                     .filter((task) => task.dueDate && !isNaN(new Date(task.dueDate)))
-//                     .map((task) => {
-//                         const restoredTask = createTask(task.title, task.description, task.projectName, task.priority, task.dueDate);
-//                         restoredTask.completed = !!task.completed;
-//                         return restoredTask;
-//                     });
-
-//                 projectsLibrary.push(project);
-//             });
-//         }
-//     } catch (error) {
-//         console.error("Error loading data from localStorage:", error);
-//     }
-// }
 
 function loadFromLocalStorage() {
     try {
@@ -330,8 +274,6 @@ function formatDueDate(date) {
         return "Today";
     } else if(isTomorrow(taskDate)) {
         return "Tomorrow";
-    } else if(isYesterday(taskDate)) {
-        return "Yesterday";
     };
 
     const weeksDifference = Math.floor(daysDifference / 7);
@@ -696,29 +638,50 @@ function sortTasksByDueDate(project) {
         return;
     }
 
+    project.tasksContainer.forEach(task => console.log(task.title, task.dueDate));
+
     project.tasksContainer.sort((a, b) => {
-        const getTaskDate = (task) => {
+        const getSortValue = (task) => {
             if (task.dueDate === "Expired") {
-                return { date: new Date(0), priority: 3 };  // "Expired" vai para o final
+                return Infinity + 1; // Expired no final.
             }
             if (task.dueDate === "No Due Date") {
-                return { date: new Date(0), priority: 2 };  // "No Due Date" vai para o final
+                return Infinity; // No Due Date antes de Expired.
             }
-            return { date: new Date(task.dueDate), priority: 1 };  // Tarefas com data válida
+            return new Date(task.dueDate).getTime(); // Datas reais.
         };
 
-        const aDate = getTaskDate(a);
-        const bDate = getTaskDate(b);
+        const aValue = getSortValue(a);
+        const bValue = getSortValue(b);
 
-        if (aDate.priority !== bDate.priority) {
-            return aDate.priority - bDate.priority;
-        }
-
-        return aDate.date - bDate.date;
+        return aValue - bValue;
     });
+
+    console.log("After sorting:", project.tasksContainer);
 
     saveToLocalStorage();
 };
+
+function updateTaskDueDates(tasks) {
+    tasks.forEach(task => {
+        console.log("Before Update:", task.dueDate); // Log do valor atual
+
+        if (!task.dueDate || task.dueDate === "No due date" || task.dueDate === "Expired") {
+            console.log("Skipping Task:", task); // Ignorando tarefas já marcadas
+            return;
+        }
+
+        const taskDate = new Date(task.dueDate);
+
+        if (isNaN(taskDate)) {
+            console.log("Invalid Date Found:", task.dueDate);
+            task.dueDate = "No due date";
+        } else if (taskDate < new Date()) {
+            console.log("Marking Task as Expired:", task.dueDate);
+            task.dueDate = "Expired";
+        }
+    });
+}
 
 function sortTasksByPriority(project) {
     if (!project) {
@@ -748,6 +711,7 @@ document.querySelector(".sort-by-dueDate").addEventListener("click", () => {
 document.querySelector(".sort-by-priority").addEventListener("click", () => {
     if(!currentProject) return;
 
+    updateTaskDueDates(currentProject.tasksContainer);
     sortTasksByPriority(currentProject);
     displayProjectTasks(currentProject);
 });
