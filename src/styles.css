@@ -368,7 +368,7 @@ header {
     background-color: rgb(30, 30, 30);
     color: var(--custom-white);
     padding: 20px;
-    min-width: 200px;
+    min-width: 250px;
 }
 
 .task-completed-div {

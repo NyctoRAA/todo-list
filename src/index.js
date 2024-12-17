@@ -638,47 +638,47 @@ function sortTasksByDueDate(project) {
         return;
     }
 
-    project.tasksContainer.forEach(task => console.log(task.title, task.dueDate));
+    const today = new Date();
 
     project.tasksContainer.sort((a, b) => {
-        const getSortValue = (task) => {
-            if (task.dueDate === "Expired") {
-                return Infinity + 1; // Expired no final.
-            }
-            if (task.dueDate === "No Due Date") {
-                return Infinity; // No Due Date antes de Expired.
-            }
-            return new Date(task.dueDate).getTime(); // Datas reais.
+        const getSortingValue = (dueDate) => {
+            if (!dueDate || dueDate === "No due date") return Infinity; // "No due date" vai para o final
+
+            const taskDate = new Date(dueDate);
+
+            if (isNaN(taskDate)) return Infinity; // Se a data não for válida, trata como "No due date"
+            if (taskDate < today) return Infinity + 1; // "Expired" depois de "No due date"
+
+            return taskDate.getTime(); // Data válida: usa timestamp para ordenação
         };
 
-        const aValue = getSortValue(a);
-        const bValue = getSortValue(b);
+        const aDueDateValue = getSortingValue(a.dueDate);
+        const bDueDateValue = getSortingValue(b.dueDate);
 
-        return aValue - bValue;
+        return aDueDateValue - bDueDateValue;
     });
 
-    console.log("After sorting:", project.tasksContainer);
+    console.log("After sorting:");
+    project.tasksContainer.forEach((task, index) => {
+        console.log(`Task ${index + 1}:`, task.title, "Due Date:", task.dueDate);
+    });
 
     saveToLocalStorage();
+    displayProjectTasks(project);
 };
 
 function updateTaskDueDates(tasks) {
-    tasks.forEach(task => {
-        console.log("Before Update:", task.dueDate); // Log do valor atual
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ignora horas para comparar apenas o dia
 
-        if (!task.dueDate || task.dueDate === "No due date" || task.dueDate === "Expired") {
-            console.log("Skipping Task:", task); // Ignorando tarefas já marcadas
-            return;
-        }
-
-        const taskDate = new Date(task.dueDate);
-
-        if (isNaN(taskDate)) {
-            console.log("Invalid Date Found:", task.dueDate);
+    tasks.forEach((task) => {
+        if (!task.dueDate || isNaN(new Date(task.dueDate))) {
             task.dueDate = "No due date";
-        } else if (taskDate < new Date()) {
-            console.log("Marking Task as Expired:", task.dueDate);
-            task.dueDate = "Expired";
+        } else {
+            const taskDate = new Date(task.dueDate);
+            if (taskDate < today) {
+                task.dueDate = "Expired";
+            }
         }
     });
 }
@@ -704,14 +704,17 @@ function sortTasksByPriority(project) {
 document.querySelector(".sort-by-dueDate").addEventListener("click", () => {
     if(!currentProject) return;
 
+    console.log("Before sort:", currentProject.tasksContainer.map((t) => t.dueDate));
     sortTasksByDueDate(currentProject);
+    console.log("After sort:", currentProject.tasksContainer.map((t) => t.dueDate));
+
     displayProjectTasks(currentProject);
 });
 
 document.querySelector(".sort-by-priority").addEventListener("click", () => {
     if(!currentProject) return;
 
-    updateTaskDueDates(currentProject.tasksContainer);
+    // updateTaskDueDates(currentProject.tasksContainer);
     sortTasksByPriority(currentProject);
     displayProjectTasks(currentProject);
 });
