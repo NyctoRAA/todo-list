@@ -432,6 +432,7 @@ header {
     pointer-events: auto;
     filter: none;
     opacity: 1 !important;
+    margin-top: auto;
 }
 
 .edit-delete-btns-container {

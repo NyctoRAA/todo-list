@@ -280,6 +280,10 @@ function formatDueDate(date) {
     const monthsDifference = Math.floor(daysDifference / 30);
     const yearsDifference = Math.floor(daysDifference / 365);
 
+    if (daysDifference < 0) {
+        return "Expired";
+    };
+
     if(daysDifference > 0) {
         if (yearsDifference >= 2) {
             return `In ${yearsDifference} years`;
@@ -296,12 +300,16 @@ function formatDueDate(date) {
         } else {
             return `In ${daysDifference} days`;
         }
-    } else if (daysDifference < 0) {
-        return "Expired";
     };
 
-    return format(taskDate, 'EEE MMM dd yyyy');
-}
+    return format(taskDate, 'MMM dd yyyy');
+};
+
+function reevaluateTaskDueDates(tasks) {
+    tasks.forEach((task) => {
+        task.formattedDueDate = formatDueDate(task.dueDate); // Atualiza a formatação
+    });
+};
 
 function displayProjectTasks(project) {
     if (!project) {
@@ -667,22 +675,6 @@ function sortTasksByDueDate(project) {
     displayProjectTasks(project);
 };
 
-function updateTaskDueDates(tasks) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Ignora horas para comparar apenas o dia
-
-    tasks.forEach((task) => {
-        if (!task.dueDate || isNaN(new Date(task.dueDate))) {
-            task.dueDate = "No due date";
-        } else {
-            const taskDate = new Date(task.dueDate);
-            if (taskDate < today) {
-                task.dueDate = "Expired";
-            }
-        }
-    });
-}
-
 function sortTasksByPriority(project) {
     if (!project) {
         console.error("No project selected!");
@@ -705,6 +697,7 @@ document.querySelector(".sort-by-dueDate").addEventListener("click", () => {
     if(!currentProject) return;
 
     console.log("Before sort:", currentProject.tasksContainer.map((t) => t.dueDate));
+    reevaluateTaskDueDates(currentProject.tasksContainer);
     sortTasksByDueDate(currentProject);
     console.log("After sort:", currentProject.tasksContainer.map((t) => t.dueDate));
 
@@ -719,6 +712,10 @@ document.querySelector(".sort-by-priority").addEventListener("click", () => {
     displayProjectTasks(currentProject);
 });
 
+// Date input blur
+document.querySelector("#dueDate").addEventListener("change", function () {
+    this.blur();
+});
 
 //Submit event listeners
 
