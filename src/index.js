@@ -403,13 +403,17 @@ function displayProjectTasks(project) {
             saveToLocalStorage();
             displayProjectTasks(project);
         });
+
+        const taskContentContainer = document.createElement("div");
+        taskContentContainer.classList.add("task-content-container");
         
-        taskDiv.appendChild(taskTitle);
+        taskContentContainer.appendChild(taskTitle);
         taskStatuses.appendChild(taskProject);
         taskStatuses.appendChild(taskPriority);
         taskStatuses.appendChild(taskDueDate);
-        taskDiv.appendChild(taskStatuses);
-        taskDiv.appendChild(taskDescription);
+        taskContentContainer.appendChild(taskStatuses);
+        taskContentContainer.appendChild(taskDescription);
+        taskDiv.appendChild(taskContentContainer);
         taskCompletedDiv.prepend(taskStatusCheckBox);
 
         // Buttons container
@@ -650,7 +654,7 @@ function sortTasksByDueDate(project) {
 
     project.tasksContainer.sort((a, b) => {
         const getSortingValue = (dueDate) => {
-            if (!dueDate || dueDate === "No due date") return Infinity; // "No due date" vai para o final
+            if (!dueDate || dueDate === "") return Infinity; // "No due date" vai para o final
 
             const taskDate = new Date(dueDate);
 
