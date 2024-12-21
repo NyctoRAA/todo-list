@@ -654,14 +654,14 @@ function sortTasksByDueDate(project) {
 
     project.tasksContainer.sort((a, b) => {
         const getSortingValue = (dueDate) => {
-            if (!dueDate || dueDate === "") return Infinity; // "No due date" vai para o final
+            if (!dueDate || dueDate === "") return Infinity;
 
             const taskDate = new Date(dueDate);
 
-            if (isNaN(taskDate)) return Infinity; // Se a data não for válida, trata como "No due date"
-            if (taskDate < today) return Infinity + 1; // "Expired" depois de "No due date"
+            if (isNaN(taskDate)) return Infinity;
+            if (taskDate < today) return Infinity + 1;
 
-            return taskDate.getTime(); // Data válida: usa timestamp para ordenação
+            return taskDate.getTime();
         };
 
         const aDueDateValue = getSortingValue(a.dueDate);
