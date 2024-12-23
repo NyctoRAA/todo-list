@@ -145,6 +145,7 @@ function createProjectUI(project) {
     trashIcon.width = 30;
     trashIcon.height = 30;
     trashIcon.classList.add("trash-icon");
+    trashIcon.classList.add("icon");
 
     deleteProjectBtn.appendChild(trashIcon);
     buttonsContainer.appendChild(deleteProjectBtn);
@@ -162,6 +163,7 @@ function createProjectUI(project) {
 
     const editIcon = document.createElement("img");
     editIcon.classList.add("edit-icon");
+    editIcon.classList.add("icon");
     editIcon.src = editIconSvg;
     editIcon.alt = "Edit Project";
     editIcon.width = 30;
@@ -429,6 +431,7 @@ function displayProjectTasks(project) {
 
         const trashIcon = document.createElement("img");
         trashIcon.classList.add("trash-icon");
+        trashIcon.classList.add("icon");
         trashIcon.src = trashIconSvg;
         trashIcon.alt = "Delete task";
         trashIcon.width = 30;
@@ -450,6 +453,7 @@ function displayProjectTasks(project) {
 
         const editIcon = document.createElement("img");
         editIcon.classList.add("edit-icon");
+        editIcon.classList.add("icon");
         editIcon.src = editIconSvg;
         editIcon.alt = "Edit task";
         editIcon.width = 30;
@@ -743,5 +747,54 @@ window.addEventListener('click', function(event) {
     if (event.target == newProjectDialog) newProjectDialog.close();
     if (event.target == newTaskDialog) newTaskDialog.close();
 });
+
+// Theme toggle
+function saveTheme(theme) {
+   localStorage.setItem("theme", theme);
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem("theme");
+    const body = document.body;
+
+    if (savedTheme === "white") {
+        body.classList.add("white-mode");
+    } else {
+        body.classList.remove("white-mode");
+    }
+};
+
+loadTheme();
+
+// function updateIconTheme(isWhiteMode) {
+//     const icons = document.querySelectorAll(".icon");
+//     icons.forEach((icon) => {
+//         const src = icon.getAttribute("src");
+//         const newSrc = isWhiteMode
+//             ? src.replace("default", "white-mode")
+//             : src.replace("white-mode", "default");
+//         icon.setAttribute("src", newSrc);
+//     })
+// }
+
+const themeToggleButton = document.querySelector(".theme-toggle-btn");
+
+const WHITE_THEME = "white-mode";
+
+document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = loadTheme();
+
+    if(savedTheme === WHITE_THEME) {
+        document.body.classList.add(WHITE_THEME);
+    }
+});
+
+function toggleTheme() {
+    const isWhiteMode = document.body.classList.toggle(WHITE_THEME);
+
+    saveTheme(isWhiteMode);
+};
+
+themeToggleButton.addEventListener("click", toggleTheme);
 
 // Home page functionalities

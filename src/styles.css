@@ -99,12 +99,22 @@ header {
     border-bottom: 0.7px solid var(--borders-white);
 }
 
+body.white-mode header {
+    background-color: white;
+    color: rgb(48, 47, 47);
+    border-bottom: 0.7px solid black;
+}
+
 .header-appInfo, .header-author {
     display: flex;
     align-items: center;
     padding: 10px;
     gap: 10px;
     color: var(--custom-white);
+}
+
+body.white-mode .header-appInfo, body.white-mode .header-author {
+    color: black;
 }
 
 .app-name-title {
@@ -115,6 +125,10 @@ header {
     font-size: 18px;
     text-decoration: none;
     color: gray;
+}
+
+body.white-mode a {
+    color: black;
 }
 
 .header-author a:hover {
@@ -136,12 +150,22 @@ header {
     overflow-y: auto;
 }
 
+body.white-mode .sidebar {
+    background-color: white;
+    color: black;
+    border-right: 0.7px solid black;
+}
+
 .sidebar-title {
     font-family: "Inter-Bold", Arial, Helvetica, sans-serif;
     font-size: 1.3em;
     color: var(--custom-white);
     margin: 0;
     padding: 0px 10px;
+}
+
+body.white-mode .sidebar-title {
+    color: black;
 }
 
 .sidebar-content {
@@ -154,9 +178,8 @@ header {
     color: lightgray;
 }
 
-.sidebar-footer {
-    text-align: center;
-    padding: 20px;
+body.white-mode .sidebar-content {
+    color: black;
 }
 
 .new-project-dialog {
@@ -170,6 +193,12 @@ header {
     width: 250px;
     border-radius: 8px;
     z-index: 1000;
+}
+
+body.white-mode .new-project-dialog {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
 }
 
 .new-project-dialog::backdrop {
@@ -195,12 +224,21 @@ header {
     font-size: 14px;
 }
 
+body.white-mode .submit-project-btn, body.white-mode .submit-task-btn {
+    background-color: black;
+    color: white;
+}
+
 .submit-project-btn:hover, .submit-task-btn:hover {
     opacity: 0.7;
 }
 
 .submit-project-btn:focus, .submit-task-btn:focus {
     outline: 2px solid #ccc;
+}
+
+body.white-mode .submit-project-btn:focus, body.white-mode .submit-task-btn:focus {
+    outline: 2px solid white;
 }
 
 .project-modal-title {
@@ -219,6 +257,11 @@ header {
     padding: 1rem;
     border-radius: 8px;
     z-index: 1000;
+}
+
+body.white-mode .new-task-dialog {
+    background-color: white;
+    color: black;
 }
 
 .new-task-dialog::backdrop {
@@ -272,10 +315,18 @@ header {
     overflow-y: auto;
 }
 
+body.white-mode .content {
+    background-color: white;
+}
+
 .content h2 {
     color: var(--custom-white);
     font-family: "Special-Font", Arial, Helvetica, sans-serif;
     text-decoration: underline;
+}
+
+body.white-mode .content h2 {
+    color: black;
 }
 
 .title-container {
@@ -296,6 +347,10 @@ header {
     color: var(--custom-white);
     margin: 0;
     transition: background-color 0.5s ease, font-size 0.5s ease;
+}
+
+body.white-mode .close-project-dialog-btn, body.white-mode .close-task-dialog-btn {
+    color: black;
 }
 
 .close-project-dialog-btn:hover, .close-task-dialog-btn:hover {
@@ -374,6 +429,12 @@ header {
     min-width: 250px;
 }
 
+body.white-mode .task {
+    border: 1px solid black;
+    color: black;
+    background-color: white;
+}
+
 .task-completed-div {
     display: flex;
     align-items: center;
@@ -391,6 +452,10 @@ header {
     display: inline-block;
 }
 
+.taskCheckBox {
+    border: 2px solid black;
+}
+
 .taskCheckBox:hover {
     cursor: pointer;
 }
@@ -399,10 +464,18 @@ header {
     outline: 1px solid #ccc;
 }
 
+.taskCheckBox:focus {
+    outline: 1px solid black;
+}
+
 .taskCheckBox:checked {
     background-color: var(--custom-white);
     border-color: #4caf50;
     color: white;
+}
+
+body.white-mode .taskCheckBox {
+    background-color: black;
 }
 
 .taskCheckBox:checked::after {
@@ -461,6 +534,10 @@ header {
     color: black;
 }
 
+body.white-mode #taskTitle {
+    border: 1px solid black;
+}
+
 .taskDescription {
     font-size: 14px;
 }
@@ -470,6 +547,10 @@ header {
     border-radius: 6px;
     font-size: 13px;
     color: black;
+}
+
+body.white-mode #taskDescription {
+    border: 1px solid black;
 }
 
 #taskDescription:focus {
@@ -550,6 +631,10 @@ header {
     align-items: center;
 }
 
+body.white-mode .add-project-btn, body.white-mode .add-task-btn {
+    color: black;
+}
+
 .add-task-btn:hover {
     opacity: 0.6;
 }
@@ -591,6 +676,10 @@ header {
     transition: transform 0.2s ease-in-out;
 }
 
+body.white-mode .icon {
+    filter: invert(1) brightness(1.5);
+}
+
 .delete-confirmation-modal {
     position: fixed;    
     top: 0;
@@ -602,6 +691,12 @@ header {
     align-items: center;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+
+body.white-mode .delete-confirmation-modal {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
 }
 
 #homePage-title {
