@@ -155,9 +155,14 @@ body.white-mode a {
     grid-area: sidebar;
     height: 100vh;
     max-width: 280px;
+    width: 100%;
+    position: fixed;
     background-color: rgb(30, 30, 30);
     border-right: 0.7px solid var(--borders-white);
     overflow-y: auto;
+    transform: translateX(0); 
+    transition: transform 0.3s ease-in-out;
+    z-index: 10;
 }
 
 body.white-mode .sidebar {
@@ -721,6 +726,14 @@ body.white-mode .delete-confirmation-modal {
     display: none;
 }
 
+.sidebar.mobile {
+    transform: translateX(-100%);
+}
+
+.sidebar.mobile.open {
+    transform: translateX(0);
+}
+
 @media (max-width: 768px) {
     .hamburger-btn {
         display: block;
@@ -745,19 +758,16 @@ body.white-mode .delete-confirmation-modal {
     }
 
     .sidebar {
-        transform: translateX(0);
-        /* width: 0; */
-        transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+        max-width: 70%;
     }
 
-    .sidebar.mobile {
-        transform: translateX(-100%);
-        width: 0;
-    }
-
-    .sidebar.mobile + .content {
+    /* .content {
         margin-left: 0;
     }
+
+    .sidebar.mobile.open + .content {
+        margin-left: 70%;
+    } */
 }
 
 #homePage-title {
