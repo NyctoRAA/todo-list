@@ -127,6 +127,16 @@ body.white-mode .header-appInfo, body.white-mode .header-author {
     color: gray;
 }
 
+.theme-toggle-btn {
+    background: none;
+    border: none;
+}
+
+.theme-toggle-btn svg {
+    fill: var(--custom-white);
+    stroke: var(--custom-white);
+}
+
 body.white-mode a {
     color: black;
 }
@@ -313,6 +323,7 @@ body.white-mode .new-task-dialog {
     background-color: rgb(48, 47, 47);
     padding: 20px;
     overflow-y: auto;
+    transition: margin-left 0.8s ease-in-out;
 }
 
 body.white-mode .content {
@@ -474,9 +485,9 @@ body.white-mode .task {
     color: white;
 }
 
-body.white-mode .taskCheckBox {
+/* body.white-mode .taskCheckBox {
     background-color: black;
-}
+} */
 
 .taskCheckBox:checked::after {
     content: '✔';
@@ -697,6 +708,56 @@ body.white-mode .delete-confirmation-modal {
     background-color: white;
     color: black;
     border: 2px solid black;
+}
+
+/* Mobile */
+.hamburger-btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    z-index: 1000;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hamburger-btn {
+        display: block;
+    }
+
+    .app-name-title {
+        font-size: 1.1rem;
+    }
+
+    #app-logo {
+        width: 35px;
+        height: 35px;
+    }
+
+    #author-logo {
+        width: 30px;
+        height: 30px;
+    }
+
+    .header-author p a{
+        font-size: 0.9rem;
+    }
+
+    .sidebar {
+        transform: translateX(0);
+        /* width: 0; */
+        transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    }
+
+    .sidebar.mobile {
+        transform: translateX(-100%);
+        width: 0;
+    }
+
+    .sidebar.mobile + .content {
+        margin-left: 0;
+    }
 }
 
 #homePage-title {

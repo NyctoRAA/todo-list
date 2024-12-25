@@ -749,8 +749,9 @@ window.addEventListener('click', function(event) {
 });
 
 // Theme toggle
-function saveTheme(theme) {
-   localStorage.setItem("theme", theme);
+function saveTheme(isWhiteMode) {
+    const theme = isWhiteMode ? "white" : "default";
+    localStorage.setItem("theme", theme);
 }
 
 function loadTheme() {
@@ -762,32 +763,17 @@ function loadTheme() {
     } else {
         body.classList.remove("white-mode");
     }
+
+    return savedTheme;
 };
 
-loadTheme();
-
-// function updateIconTheme(isWhiteMode) {
-//     const icons = document.querySelectorAll(".icon");
-//     icons.forEach((icon) => {
-//         const src = icon.getAttribute("src");
-//         const newSrc = isWhiteMode
-//             ? src.replace("default", "white-mode")
-//             : src.replace("white-mode", "default");
-//         icon.setAttribute("src", newSrc);
-//     })
-// }
+document.addEventListener("DOMContentLoaded", () => {
+    loadTheme();
+});
 
 const themeToggleButton = document.querySelector(".theme-toggle-btn");
 
 const WHITE_THEME = "white-mode";
-
-document.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = loadTheme();
-
-    if(savedTheme === WHITE_THEME) {
-        document.body.classList.add(WHITE_THEME);
-    }
-});
 
 function toggleTheme() {
     const isWhiteMode = document.body.classList.toggle(WHITE_THEME);
@@ -796,5 +782,31 @@ function toggleTheme() {
 };
 
 themeToggleButton.addEventListener("click", toggleTheme);
+
+// Mobile functions
+
+const hamburgerBtn = document.querySelector(".hamburger-btn");
+const sidebar = document.querySelector(".sidebar");
+
+hamburgerBtn.addEventListener("click", () => {
+    const isOpen = sidebar.classList.toggle("mobile");
+    hamburgerBtn.setAttribute("aria-expanded", isOpen);
+
+    function initializeSidebar() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add("mobile");
+        } else {
+            sidebar.classList.remove("mobile");
+        }
+    }
+
+    hamburgerBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("mobile");
+    });
+
+    window.addEventListener("resize", initializeSidebar);
+
+    initializeSidebar();
+});
 
 // Home page functionalities
