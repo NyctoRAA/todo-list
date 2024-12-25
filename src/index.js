@@ -633,8 +633,16 @@ function positionModal(button, modal) {
         left = buttonRect.left + window.scrollX - modalWidth;
     }
 
+    if (left < 0) {
+        left = 10;
+    }
+
     if (top + modalHeight > window.innerHeight) {
         top = buttonRect.bottom + window.scrollY - modalHeight;
+    }
+
+    if (top < 0) {
+        top = buttonRect.bottom + window.scrollY + 10;
     }
 
     if (top + modalHeight > window.innerHeight) {
@@ -645,6 +653,10 @@ function positionModal(button, modal) {
 
     modal.style.left = `${left}px`;
     modal.style.top = `${top}px`;
+
+    modal.style.maxWidth = `${window.innerWidth - 20}px`; 
+    modal.style.maxHeight = `${window.innerHeight - 20}px`; 
+    modal.style.overflow = "auto";
 }
 
 // Sort Tasks
@@ -807,6 +819,21 @@ hamburgerBtn.addEventListener("click", () => {
     window.addEventListener("resize", initializeSidebar);
 
     initializeSidebar();
+});
+
+const projectDivs = document.querySelectorAll(".project-container");
+
+function closeSidebarOnMobile() {
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    if(isMobile && !sidebar.classList.contains("mobile")) {
+        sidebar.classList.add("mobile");
+        hamburgerBtn.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+    };
+};
+
+projectDivs.forEach((project) => {
+    project.addEventListener("click", closeSidebarOnMobile);
 });
 
 // Home page functionalities
