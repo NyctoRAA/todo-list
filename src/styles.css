@@ -133,8 +133,13 @@ body.white-mode .header-appInfo, body.white-mode .header-author {
 }
 
 .theme-toggle-btn svg {
-    fill: var(--custom-white);
-    stroke: var(--custom-white);
+    /* fill: var(--custom-white);
+    stroke: var(--custom-white); */
+    filter: invert(1) brightness(0.9);
+}
+
+body.white-mode .theme-toggle-btn svg {
+    filter: none;
 }
 
 body.white-mode a {
@@ -155,14 +160,13 @@ body.white-mode a {
     grid-area: sidebar;
     height: 100vh;
     max-width: 280px;
-    width: 100%;
-    position: fixed;
+    /* width: 100%; */
+    /* position: fixed; */
     background-color: rgb(30, 30, 30);
     border-right: 0.7px solid var(--borders-white);
     overflow-y: auto;
     transform: translateX(0); 
     transition: transform 0.3s ease-in-out;
-    z-index: 10;
 }
 
 body.white-mode .sidebar {
@@ -716,14 +720,22 @@ body.white-mode .delete-confirmation-modal {
 }
 
 /* Mobile */
+.hamburger-btn-container {
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
 .hamburger-btn {
-    position: fixed;
-    top: 10px;
-    left: 10px;
+    color: var(--custom-white);
     background: none;
     border: none;
     z-index: 1000;
     display: none;
+}
+
+body.white-mode .hamburger-btn {
+    color: black;
 }
 
 .sidebar.mobile {
@@ -731,6 +743,7 @@ body.white-mode .delete-confirmation-modal {
 }
 
 .sidebar.mobile.open {
+    padding-top: 50px;
     transform: translateX(0);
 }
 

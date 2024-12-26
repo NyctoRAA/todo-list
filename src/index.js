@@ -798,12 +798,14 @@ themeToggleButton.addEventListener("click", toggleTheme);
 // Mobile functions
 
 const hamburgerBtn = document.querySelector(".hamburger-btn");
+const hamburgerBtnContainer = document.querySelector(".hamburger-btn-container");
 const sidebar = document.querySelector(".sidebar");
 const projectDivs = document.querySelectorAll(".project-container");
 
 function initializeSidebar() {
     if(window.innerWidth <= 768) {
         sidebar.classList.add("mobile");
+        hamburgerBtnContainer.style.display = "flex";
     } else {
         sidebar.classList.remove("mobile");
         sidebar.classList.remove("open");
