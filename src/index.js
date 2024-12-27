@@ -120,6 +120,10 @@ function showDeleteModal(context, onConfirmCallback) {
     cancelBtn.onclick = () => {
         deleteModal.classList.add("hidden");
     };
+
+    window.addEventListener("click", function(event) {
+        if(event.target === deleteModal) deleteModal.classList.add("hidden");
+    })
 }
 
 function createProjectUI(project) {
