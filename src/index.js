@@ -309,7 +309,7 @@ function formatDueDate(date) {
 
 function reevaluateTaskDueDates(tasks) {
     tasks.forEach((task) => {
-        task.formattedDueDate = formatDueDate(task.dueDate); // Atualiza a formatação
+        task.formattedDueDate = formatDueDate(task.dueDate);
     });
 };
 
@@ -664,36 +664,36 @@ function sortTasksByDueDate(project) {
     if (!project) {
         console.error("No project selected!");
         return;
-    }
+    };
 
     const today = new Date();
+    today.setHours(0, 0, 0, 0); 
 
     project.tasksContainer.sort((a, b) => {
         const getSortingValue = (dueDate) => {
-            if (!dueDate || dueDate === "") return Infinity;
+            if (!dueDate || dueDate === "") return 1; 
 
             const taskDate = new Date(dueDate);
+            if (isNaN(taskDate)) return 1; 
 
-            if (isNaN(taskDate)) return Infinity;
-            if (taskDate < today) return Infinity + 1;
+            if (taskDate < today) return 2; 
 
-            return taskDate.getTime();
+            return 0;
         };
 
-        const aDueDateValue = getSortingValue(a.dueDate);
-        const bDueDateValue = getSortingValue(b.dueDate);
+        const aValue = getSortingValue(a.dueDate);
+        const bValue = getSortingValue(b.dueDate);
 
-        return aDueDateValue - bDueDateValue;
-    });
+        if (aValue !== 0 || bValue !== 0) {
+            return aValue - bValue;
+        };
 
-    console.log("After sorting:");
-    project.tasksContainer.forEach((task, index) => {
-        console.log(`Task ${index + 1}:`, task.title, "Due Date:", task.dueDate);
+        return new Date(a.dueDate) - new Date(b.dueDate);
     });
 
     saveToLocalStorage();
     displayProjectTasks(project);
-};
+}
 
 function sortTasksByPriority(project) {
     if (!project) {
@@ -716,10 +716,8 @@ function sortTasksByPriority(project) {
 document.querySelector(".sort-by-dueDate").addEventListener("click", () => {
     if(!currentProject) return;
 
-    console.log("Before sort:", currentProject.tasksContainer.map((t) => t.dueDate));
     reevaluateTaskDueDates(currentProject.tasksContainer);
     sortTasksByDueDate(currentProject);
-    console.log("After sort:", currentProject.tasksContainer.map((t) => t.dueDate));
 
     displayProjectTasks(currentProject);
 });
@@ -727,7 +725,6 @@ document.querySelector(".sort-by-dueDate").addEventListener("click", () => {
 document.querySelector(".sort-by-priority").addEventListener("click", () => {
     if(!currentProject) return;
 
-    // updateTaskDueDates(currentProject.tasksContainer);
     sortTasksByPriority(currentProject);
     displayProjectTasks(currentProject);
 });
@@ -740,7 +737,6 @@ document.querySelector("#dueDate").addEventListener("change", function () {
 //Submit event listeners
 
 submitProjectBtn.addEventListener("click", addProjectHandler);
-
 submitTaskBtn.addEventListener("click", addTaskHandler);
 
 // Show & close modals listeners
@@ -836,4 +832,4 @@ projectDivs.forEach((project) => {
 
 window.addEventListener("resize", initializeSidebar);
 
-// Home page functionalities
+// Home page functionalities (still in development...)

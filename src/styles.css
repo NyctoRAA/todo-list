@@ -87,8 +87,16 @@ input[type="text"] {
     font-size: 13px;
 }
 
+body.white-mode input[type="text"] {
+    border: 1px solid black;
+}
+
 input[type="text"]:focus {
     outline: 2px solid #ccc;
+}
+
+body.white-mode input[type="text"]:focus {
+    outline: 2px solid black;
 }
 
 header {
@@ -453,6 +461,8 @@ body.white-mode .task {
     border: 1px solid black;
     color: black;
     background-color: white;
+    box-shadow: 0 3px 6px rgba(67, 66, 66, 0.25), 
+    0 1px 3px rgba(96, 95, 95, 0.15);
 }
 
 .task-completed-div {
@@ -484,7 +494,7 @@ body.white-mode .task {
     outline: 1px solid #ccc;
 }
 
-.taskCheckBox:focus {
+body.white-mode .taskCheckBox:focus {
     outline: 1px solid black;
 }
 
@@ -577,6 +587,10 @@ body.white-mode #taskDescription {
     outline: 2px solid #ccc;
 }
 
+body.white-mode #taskDescription:focus {
+    outline: 2px solid black;
+}
+
 .task-statuses {
     display: flex;
     gap: 8px;
@@ -613,6 +627,10 @@ body.white-mode #taskDescription {
     outline: 2px solid #ccc;
 }
 
+body.white-mode #taskPriority:focus {
+    outline: 2px solid black;
+}
+
 .taskDueDate {
     display: flex;
     justify-content: center;
@@ -626,10 +644,19 @@ body.white-mode #taskDescription {
 #dueDate {
     border-radius: 6px;
     padding: 2px;
+    border: 1px solid #cacaca;
+}
+
+body.white-mode #dueDate {
+    border: 1px solid black;
 }
 
 #dueDate:focus {
     outline: 2px solid #ccc;
+}
+
+body.white-mode #dueDate:focus {
+    outline: 2px solid black;
 }
 
 .add-project-btn, .add-task-btn {
