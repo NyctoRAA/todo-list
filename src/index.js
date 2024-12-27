@@ -124,7 +124,7 @@ function showDeleteModal(context, onConfirmCallback) {
     window.addEventListener("click", function(event) {
         if(event.target === deleteModal) deleteModal.classList.add("hidden");
     })
-}
+};
 
 function createProjectUI(project) {
     const projectDiv = document.createElement("div");
