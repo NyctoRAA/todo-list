@@ -9,14 +9,20 @@ import { format, isTomorrow, isToday, differenceInDays } from 'date-fns';
 const addProjectBtn = document.querySelector(".add-project-btn");
 const submitProjectBtn = document.querySelector(".submit-project-btn");
 const submitTaskBtn = document.querySelector(".submit-task-btn");
+
 const closeProjectsModalBtn = document.querySelector(".close-project-dialog-btn");
 const closeTasksModalBtn = document.querySelector(".close-task-dialog-btn");
+const closeDeleteModal = document.querySelector(".close-dialog-btn");
 
 const tasksContainerDiv = document.querySelector(".tasks-container");
 const projectsContainer = document.querySelector(".projects-container");
+
 const newProjectDialog = document.querySelector(".new-project-dialog");
 const newTaskDialog = document.querySelector(".new-task-dialog");
+
 const mainPage = document.querySelector(".content");
+
+const deleteModal = document.querySelector(".delete-confirmation-modal");
 
 const projectsLibrary = [];
 let currentProject = null;
@@ -85,7 +91,6 @@ loadFromLocalStorage();
 projectsLibrary.forEach((project) => createProjectUI(project));
 
 function showDeleteModal(context, onConfirmCallback) {
-    const deleteModal = document.querySelector(".delete-confirmation-modal");
     const confirmBtn = document.querySelector("#confirm-delete-btn");
     const cancelBtn = document.querySelector("#cancel-delete-btn");
     const dontAskAgainCheckbox = document.querySelector("#dont-ask-again");
@@ -107,23 +112,21 @@ function showDeleteModal(context, onConfirmCallback) {
         return;
     };
 
-    deleteModal.classList.remove("hidden");
+    deleteModal.showModal();
 
+    dontAskAgainCheckbox.focus();
+   
     confirmBtn.onclick = () => {
         if(dontAskAgainCheckbox.checked) {
             localStorage.setItem(localStorageKey, "true");
         }
         onConfirmCallback();
-        deleteModal.classList.add("hidden");
+        deleteModal.close();
     };
 
     cancelBtn.onclick = () => {
-        deleteModal.classList.add("hidden");
+        deleteModal.close();
     };
-
-    window.addEventListener("click", function(event) {
-        if(event.target === deleteModal) deleteModal.classList.add("hidden");
-    })
 };
 
 function createProjectUI(project) {
@@ -753,11 +756,14 @@ addProjectBtn.addEventListener("click", () => {
 
 closeProjectsModalBtn.addEventListener("click", () => newProjectDialog.close());
 closeTasksModalBtn.addEventListener("click", () => newTaskDialog.close());
+closeDeleteModal.addEventListener("click", () => deleteModal.close());
+
 
 // Close modals on outside click
 window.addEventListener('click', function(event) {
     if (event.target == newProjectDialog) newProjectDialog.close();
     if (event.target == newTaskDialog) newTaskDialog.close();
+    if(event.target === deleteModal) deleteModal.close();
 });
 
 // Theme toggle

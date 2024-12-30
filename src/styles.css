@@ -367,7 +367,7 @@ body.white-mode .content h2 {
     justify-content: center;
 }
 
-.close-project-dialog-btn, .close-task-dialog-btn {
+.close-project-dialog-btn, .close-task-dialog-btn, .close-dialog-btn {
     position: absolute;
     right: 0;
     top: 0;
@@ -381,16 +381,16 @@ body.white-mode .content h2 {
     transition: background-color 0.5s ease, font-size 0.5s ease;
 }
 
-body.white-mode .close-project-dialog-btn, body.white-mode .close-task-dialog-btn {
+body.white-mode .close-project-dialog-btn, body.white-mode .close-task-dialog-btn, body.white-mode .close-dialog-btn {
     color: black;
 }
 
-.close-project-dialog-btn:hover, .close-task-dialog-btn:hover {
+.close-project-dialog-btn:hover, .close-task-dialog-btn:hover, .close-dialog-btn:hover {
     background-color: rgba(169, 169, 169, 0.304);
     font-size: 0.9rem;
 }
 
-.close-project-dialog-btn:focus, .close-task-dialog-btn:focus {
+.close-project-dialog-btn:focus, .close-task-dialog-btn:focus, .close-dialog-btn:focus {
     outline: none;
     background-color: #cccccc44;
 }
@@ -732,20 +732,16 @@ body.white-mode .icon {
 }
 
 .delete-confirmation-modal {
-    position: fixed;    
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: rgb(30, 30, 30);
     color: var(--custom-white);
     border: 1px solid rgb(48, 47, 47);
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(146, 143, 143, 0.2);
     z-index: 999;
+}
+
+.delete-confirmation-modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.574);
 }
 
 body.white-mode .delete-confirmation-modal {
@@ -755,13 +751,69 @@ body.white-mode .delete-confirmation-modal {
     box-shadow: 0px 4px 8px rgba(41, 41, 41, 0.2);
 }
 
+.del-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0px 20px 20px 20px;
+}
+
+#delete-modal-message {
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .del-modal-options {
     display: flex;
     gap: 8px;
 }
 
-.confirm-delete-btn, .cancel-delete-btn {
-    padding: 2px 10px;
+#dont-ask-again {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    border: 2px solid #ccc;
+    background-color: white;
+    appearance: none;
+}
+
+body.white-mode #dont-ask-again {
+    border: 1px solid black;
+    outline: 1px solid black;
+    background-color: white;
+    color: black;;
+}
+
+#dont-ask-again:checked {
+    border: 2px solid #4CAF50; 
+    background-color: #4CAF50;
+}
+
+#dont-ask-again:focus {
+    outline: 3px solid #444343;
+}
+
+body.white-mode #dont-ask-again:focus {
+    outline: 3px solid #444343;
+}
+
+body.white-mode #dont-ask-again:checked {
+    border: 2px solid #4CAF50; 
+    background-color: #4CAF50;
+}
+
+#dont-ask-again:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.del-modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+#confirm-delete-btn, #cancel-delete-btn {
+    padding: 5px 15px;
     background-color: white;
     border: none;
     border-radius: 6px;
@@ -777,16 +829,21 @@ body.white-mode .submit-project-btn, body.white-mode .submit-task-btn {
     color: white;
 }
 
-.confirm-delete-btn:hover, .cancel-delete-btn:hover {
+#confirm-delete-btn:hover, #cancel-delete-btn:hover {
     opacity: 0.7;
 }
 
-.confirm-delete-btn:focus, .cancel-delete-btn:focus {
+#confirm-delete-btn:focus, #cancel-delete-btn:focus {
     outline: 2px solid #ccc;
 }
 
-body.white-mode .confirm-delete-btn:focus, body.white-mode .cancel-delete-btn:focus {
-    outline: 2px solid white;
+body.white-mode #confirm-delete-btn, body.white-mode #cancel-delete-btn {
+    background-color: black;
+    color: white;
+}
+
+body.white-mode #confirm-delete-btn:focus, body.white-mode #cancel-delete-btn:focus {
+    outline: 2px solid black;   
 }
 
 /* Mobile */
