@@ -108,17 +108,22 @@
             </div>
         </dialog>
 
-        <div class="delete-confirmation-modal hidden">
-            <div class="del-modal-content">
-                <p id="delete-modal-message">Are you sure you want to delete this?</p>
-                <div class="del-modal-options">
-                    <label for="dont-ask-again">Don't ask me again</label>
-                    <input type="checkbox" id="dont-ask-again">
-                </div>
-                <button id="confirm-delete-btn">Yes</button>
-                <button id="cancel-delete-btn">No</button>
+        <dialog class="delete-confirmation-modal" aria-label="Delete Confirmation">
+            <div class="close-dialog">
+                <button class="close-dialog-btn">X</button>
             </div>
-        </div>
+                <div class="del-modal-content">
+                    <p id="delete-modal-message">Are you sure you want to delete this?</p>
+                    <div class="del-modal-options">
+                        <label for="dont-ask-again">Don't ask me again</label>
+                        <input type="checkbox" id="dont-ask-again">
+                    </div>
+                    <div class="del-modal-buttons">
+                        <button id="confirm-delete-btn">Yes</button>
+                        <button id="cancel-delete-btn">No</button>
+                    </div>
+                </div>
+        </dialog>
     </main>
 </body>
 </html>
